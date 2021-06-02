@@ -4,10 +4,6 @@
 
 package xsort
 
-const (
-	minSizeForBinarySearch = 6 // minimum size by which binary search becomes more performant than linear search
-)
-
 // Exist uses either linear search (for slices with less than 6 elements) or binary search (otherwise)
 // to check if there is an index i for which cmp(i) returns 0, meaning a value x exists in
 // a sorted, indexable data structure such as an array or slice. In this case, the argument cmp,
@@ -27,7 +23,7 @@ const (
 // See ExistInts for an example of usage.
 //
 func Exist(n int, cmp func(int) int) bool {
-	if n < minSizeForBinarySearch { // linear search
+	if n < 6 { // linear search
 		for i := 0; i < n; i++ {
 			if cmp(i) == 0 {
 				return true
