@@ -36,7 +36,29 @@ func TestExist(t *testing.T) {
 			expected: false,
 		},
 		{
-			name: "item is first element",
+			name: "item is first element - linear search",
+			n:    5,
+			cmp: func(i int) int {
+				if i == 0 {
+					return 0
+				}
+				return +1
+			},
+			expected: true,
+		},
+		{
+			name: "item is last element - linear search",
+			n:    5,
+			cmp: func(i int) int {
+				if i == 4 {
+					return 0
+				}
+				return -1
+			},
+			expected: true,
+		},
+		{
+			name: "item is first element - binary search",
 			n:    1e9,
 			cmp: func(i int) int {
 				if i == 0 {
@@ -47,7 +69,7 @@ func TestExist(t *testing.T) {
 			expected: true,
 		},
 		{
-			name: "item is last element",
+			name: "item is last element - binary search",
 			n:    1e9,
 			cmp: func(i int) int {
 				if i == 1e9-1 {
