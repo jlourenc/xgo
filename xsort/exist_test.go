@@ -7,7 +7,7 @@ package xsort_test
 import (
 	"testing"
 
-	. "jlourenc/xgo/xsort"
+	. "github.com/jlourenc/xgo/xsort"
 )
 
 func TestExist(t *testing.T) {
