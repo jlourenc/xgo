@@ -55,11 +55,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-${{ matrix.golang }}-
       - name: Run tests
-        run: go test -v --race -coverprofile=profile.cov ./...
+        run: go test -v --race -coverprofile=covprofile ./...
       - name: Send coverage
         uses: shogo82148/actions-goveralls@v1
         with:
-          path-to-profile: profile.cov
+          path-to-profile: covprofile
           flag-name: ${{ runner.os }}-go-${{ matrix.golang }}
           parallel: true
   finish:
