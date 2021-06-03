@@ -27,7 +27,8 @@ jobs:
     name: lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v2.5.2
         with:
@@ -41,7 +42,8 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: Install Go
         uses: actions/setup-go@v2
         with:
@@ -53,4 +55,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-${{ matrix.golang }}-
       - name: Run tests
-        run: go test -v --race ./...
+        run: go test -v --race -coverprofile=profile.cov ./...
+      - name: Send coverage
+        uses: shogo82148/actions-goveralls@v1
+        with:
+          path-to-profile: profile.cov
+          flag-name: ${{ runner.os }}-go-${{ matrix.golang }}
+          parallel: true
+  finish:
+    needs: go-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: shogo82148/actions-goveralls@v1
+        with:
+          parallel-finished: true
