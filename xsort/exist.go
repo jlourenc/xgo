@@ -25,8 +25,6 @@ const (
 //
 // Exist calls cmp(i) only for i in the range [0, n).
 //
-// See ExistInts for an example of usage.
-//
 func Exist(n int, cmp func(int) int) bool {
 	if n < minSizeForBinarySearch { // linear search
 		for i := 0; i < n; i++ {
