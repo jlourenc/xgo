@@ -19,7 +19,7 @@ type TimestampMilli struct {
 	time.Time
 }
 
-// DateStampMilli returns the Time corresponding to
+// DateStampMilli returns the TimestampMilli corresponding to
 //	yyyy-mm-dd hh:mm:ss + msec milliseconds
 // in the appropriate zone for that timestamp in the given location.
 //
@@ -34,7 +34,7 @@ func DateStampMilli(year int, month time.Month, day, hour, min, sec, msec int, l
 	return TimestampMilli{time.Date(year, month, day, hour, min, sec, msec*nsecInMsec, loc)}
 }
 
-// NowStampMilli returns the current local time.
+// NowStampMilli returns the current local time as TimestampMilli.
 //
 // See time.Now for more information.
 func NowStampMilli() TimestampMilli {
