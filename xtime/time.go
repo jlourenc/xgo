@@ -29,7 +29,7 @@ type TimeMilli struct {
 	time.Time
 }
 
-// DateMilli returns the Time corresponding to
+// DateMilli returns the TimeMilli corresponding to
 //	yyyy-mm-dd hh:mm:ss + msec milliseconds
 // in the appropriate zone for that time in the given location.
 //
@@ -44,7 +44,7 @@ func DateMilli(year int, month time.Month, day, hour, min, sec, msec int, loc *t
 	return TimeMilli{time.Date(year, month, day, hour, min, sec, msec*nsecInMsec, loc)}
 }
 
-// NowMilli returns the current local time.
+// NowMilli returns the current local time as TimeMilli.
 //
 // See time.Now for more information.
 func NowMilli() TimeMilli {
