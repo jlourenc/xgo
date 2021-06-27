@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package xtime provides additional primitives and structures for measuring and displaying time.
+// Package xtime extends the Go standard library package time
+// by providing additional primitives and structures for measuring and displaying time.
 package xtime
 
 import (
@@ -12,17 +13,17 @@ import (
 )
 
 const (
-	hourInDay  = 24
-	minInHour  = 60
-	msecInSec  = 1e3
-	nsecInMsec = 1e6
-	secInMin   = 60
+	hoursInDay  = 24
+	minsInHour  = 60
+	msecsInSec  = 1e3
+	nsecsInMsec = 1e6
+	secsInMin   = 60
 )
 
 // A TimeMilli represents an instant in time with nanosecond precision,
 // except for JSON/Text encoding/decoding which is of millisecond precision:
-// - encoding uses xtime.RFC3339Milli layout,
-// - decoding handles both Unix timestamps in milliseconds and xtime.RFC3339Milli layout.
+// 1) encoding uses xtime.RFC3339Milli layout,
+// 2) decoding handles both Unix timestamps in milliseconds and xtime.RFC3339Milli layout.
 //
 // See time.Time for more information.
 type TimeMilli struct {
@@ -36,12 +37,12 @@ type TimeMilli struct {
 // See time.Date for more information.
 func DateMilli(year int, month time.Month, day, hour, min, sec, msec int, loc *time.Location) TimeMilli {
 	// Normalize msec, sec, min, hour, overflowing into day.
-	sec, msec = norm(sec, msec, msecInSec)
-	min, sec = norm(min, sec, secInMin)
-	hour, min = norm(hour, min, minInHour)
-	day, hour = norm(day, hour, hourInDay)
+	sec, msec = norm(sec, msec, msecsInSec)
+	min, sec = norm(min, sec, secsInMin)
+	hour, min = norm(hour, min, minsInHour)
+	day, hour = norm(day, hour, hoursInDay)
 
-	return TimeMilli{time.Date(year, month, day, hour, min, sec, msec*nsecInMsec, loc)}
+	return TimeMilli{time.Date(year, month, day, hour, min, sec, msec*nsecsInMsec, loc)}
 }
 
 // NowMilli returns the current local time as TimeMilli.
@@ -62,16 +63,16 @@ func ToMilli(t time.Time) TimeMilli {
 //
 // See time.Unix for more information.
 func UnixMilli(sec, msec int64) TimeMilli {
-	if msec < 0 || msec >= msecInSec {
-		n := msec / msecInSec
+	if msec < 0 || msec >= msecsInSec {
+		n := msec / msecsInSec
 		sec += n
-		msec -= n * msecInSec
+		msec -= n * msecsInSec
 		if msec < 0 {
-			msec += msecInSec
+			msec += msecsInSec
 			sec--
 		}
 	}
-	return TimeMilli{time.Unix(sec, msec*nsecInMsec)}
+	return TimeMilli{time.Unix(sec, msec*nsecsInMsec)}
 }
 
 // Add returns the time t+d.
@@ -135,7 +136,7 @@ func (t TimeMilli) MarshalText() ([]byte, error) {
 // Millisecond returns the millisecond offset within the second specified by t,
 // in the range [0, 999].
 func (t TimeMilli) Millisecond() int {
-	return t.Nanosecond() / nsecInMsec
+	return t.Nanosecond() / nsecsInMsec
 }
 
 // Round returns the result of rounding t to the nearest multiple of d (since the zero time).
@@ -168,13 +169,13 @@ func (t TimeMilli) UTC() TimeMilli {
 // UnixMilli returns t as a Unix timestamp, the number of milliseconds elapsed
 // since Time 1, 1970 UTC. The result does not depend on the location associated with it.
 func (t TimeMilli) UnixMilli() int64 {
-	return t.UnixNano() / nsecInMsec
+	return t.UnixNano() / nsecsInMsec
 }
 
 // UnmarshalJSON implements the json.Unmarshaler interface.
-// The time is expected to be:
-// - either a quoted string in RFC 3339 format,
-// - or a timestamp with millisecond precision expressed either as a number or a quoted string.
+// The time is expected to be either
+// 1) a quoted string in RFC 3339 format, or
+// 2) a timestamp with millisecond precision expressed either as a number or a quoted string.
 //
 // See time.Time.UnmarshalJSON for more information.
 func (t *TimeMilli) UnmarshalJSON(data []byte) error {
@@ -193,9 +194,9 @@ func (t *TimeMilli) UnmarshalJSON(data []byte) error {
 }
 
 // UnmarshalText implements the encoding.TextUnmarshaler interface.
-// The time is expected to be:
-// - either a timestamp with millisecond precision,
-// - or in RFC 3339 format.
+// The time is expected to be either
+// 1) a timestamp with millisecond precision, or
+// 2) in RFC 3339 format.
 //
 // See time.Time.UnmarshalText for more information.
 func (t *TimeMilli) UnmarshalText(data []byte) error {

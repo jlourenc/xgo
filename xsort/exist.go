@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package xsort provides additional primitives on sorted slices and user-defined collections.
+// Package xsort extends the Go standard library package sort
+// by providing additional primitives on sorted slices and user-defined collections.
 package xsort
 
 const (

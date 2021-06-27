@@ -11,8 +11,8 @@ import (
 
 // A TimestampMilli represents an instant in time with nanosecond precision,
 // except for JSON/Text encoding/decoding which is of millisecond precision:
-// - encoding uses Unix timestamps in milliseconds,
-// - decoding handles both Unix timestamps in milliseconds and xtime.RFC3339Milli layout.
+// 1) encoding uses Unix timestamps in milliseconds,
+// 2) decoding handles both Unix timestamps in milliseconds and xtime.RFC3339Milli layout.
 //
 // See time.Time for more information.
 type TimestampMilli struct {
@@ -26,12 +26,12 @@ type TimestampMilli struct {
 // See time.Date for more information.
 func DateStampMilli(year int, month time.Month, day, hour, min, sec, msec int, loc *time.Location) TimestampMilli {
 	// Normalize msec, sec, min, hour, overflowing into day.
-	sec, msec = norm(sec, msec, msecInSec)
-	min, sec = norm(min, sec, secInMin)
-	hour, min = norm(hour, min, minInHour)
-	day, hour = norm(day, hour, hourInDay)
+	sec, msec = norm(sec, msec, msecsInSec)
+	min, sec = norm(min, sec, secsInMin)
+	hour, min = norm(hour, min, minsInHour)
+	day, hour = norm(day, hour, hoursInDay)
 
-	return TimestampMilli{time.Date(year, month, day, hour, min, sec, msec*nsecInMsec, loc)}
+	return TimestampMilli{time.Date(year, month, day, hour, min, sec, msec*nsecsInMsec, loc)}
 }
 
 // NowStampMilli returns the current local time as TimestampMilli.
@@ -52,16 +52,16 @@ func ToStampMilli(t time.Time) TimestampMilli {
 //
 // See time.Unix for more information.
 func UnixStampMilli(sec, msec int64) TimestampMilli {
-	if msec < 0 || msec >= msecInSec {
-		n := msec / msecInSec
+	if msec < 0 || msec >= msecsInSec {
+		n := msec / msecsInSec
 		sec += n
-		msec -= n * msecInSec
+		msec -= n * msecsInSec
 		if msec < 0 {
-			msec += msecInSec
+			msec += msecsInSec
 			sec--
 		}
 	}
-	return TimestampMilli{time.Unix(sec, msec*nsecInMsec)}
+	return TimestampMilli{time.Unix(sec, msec*nsecsInMsec)}
 }
 
 // Add returns the time t+d.
@@ -110,7 +110,7 @@ func (t TimestampMilli) MarshalText() ([]byte, error) {
 // Millisecond returns the millisecond offset within the second specified by t,
 // in the range [0, 999].
 func (t TimestampMilli) Millisecond() int {
-	return t.Nanosecond() / nsecInMsec
+	return t.Nanosecond() / nsecsInMsec
 }
 
 // Round returns the result of rounding t to the nearest multiple of d (since the zero time).
@@ -143,13 +143,13 @@ func (t TimestampMilli) UTC() TimestampMilli {
 // UnixMilli returns t as a Unix timestamp, the number of milliseconds elapsed
 // since Time 1, 1970 UTC. The result does not depend on the location associated with it.
 func (t TimestampMilli) UnixMilli() int64 {
-	return t.UnixNano() / nsecInMsec
+	return t.UnixNano() / nsecsInMsec
 }
 
 // UnmarshalJSON implements the json.Unmarshaler interface.
-// The time is expected to be:
-// - either a quoted string in RFC 3339 format,
-// - or a timestamp with millisecond precision expressed either as a number or a quoted string.
+// The time is expected to be either
+// 1) a quoted string in RFC 3339 format, or
+// 2) a timestamp with millisecond precision expressed either as a number or a quoted string.
 //
 // See time.Time.UnmarshalJSON for more information.
 func (t *TimestampMilli) UnmarshalJSON(data []byte) error {
@@ -168,9 +168,9 @@ func (t *TimestampMilli) UnmarshalJSON(data []byte) error {
 }
 
 // UnmarshalText implements the encoding.TextUnmarshaler interface.
-// The time is expected to be:
-// - either a timestamp with millisecond precision,
-// - or in RFC 3339 format.
+// The time is expected to be either
+// 1) a timestamp with millisecond precision, or
+// 2) in RFC 3339 format.
 //
 // See time.Time.UnmarshalText for more information.
 func (t *TimestampMilli) UnmarshalText(data []byte) error {
