@@ -12,7 +12,7 @@ linters-settings:
   gci:
     local-prefixes: github.com/jlourenc/xgo
   gocognit:
-    min-complexity: 15
+    min-complexity: 25
   goconst:
     min-len: 2
     min-occurrences: 2
@@ -36,7 +36,7 @@ linters-settings:
   lll:
     line-length: 140
   nestif:
-    min-complexity: 4
+    min-complexity: 6
   maligned:
     suggest-new: true
   misspell:
