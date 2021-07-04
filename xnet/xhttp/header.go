@@ -6,6 +6,13 @@
 // by providing additional HTTP client and server implementations.
 package xhttp
 
+import (
+	"errors"
+	"net/http"
+	"strings"
+	"time"
+)
+
 // HTTP standard headers.
 const (
 	// https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.2
@@ -243,3 +250,73 @@ const (
 	// https://datatracker.ietf.org/doc/html/rfc5861#section-3
 	CacheControlStaleWhileRevalidate = "stale-while-revalidate"
 )
+
+var (
+	errHeaderNoDate = errors.New("no date header")
+)
+
+// HeaderKeyValues returns all key/value pairs associated with the given key, or nil if the key does not exist.
+// It is case insensitive; textproto.CanonicalMIMEHeaderKey is used to canonicalize the provided key.
+func HeaderKeyValues(headers http.Header, key string) map[string]string {
+	values := HeaderValues(headers, key)
+	if values == nil {
+		return nil
+	}
+
+	headerKeyValues := make(map[string]string, len(values))
+	for _, value := range values {
+		if keyValue := strings.Split(value, "="); len(keyValue) > 1 {
+			headerKeyValues[keyValue[0]] = keyValue[1]
+		} else {
+			headerKeyValues[value] = ""
+		}
+	}
+
+	return headerKeyValues
+}
+
+// HeaderValues returns all values associated with the given key, or nil if the key does not exist.
+// It is case insensitive; textproto.CanonicalMIMEHeaderKey is used to canonicalize the provided key.
+// As per Section 4.2 of the RFC 2616 (http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2),
+// values from multiple occurrences of a header should be concatenated, if the header's value is a comma-separated list.
+func HeaderValues(headers http.Header, key string) (headerValues []string) {
+	for _, value := range headers.Values(key) {
+		fields := strings.Split(value, ",")
+		for i, f := range fields {
+			fields[i] = strings.TrimSpace(f)
+		}
+		headerValues = append(headerValues, fields...)
+	}
+	return
+}
+
+// ParseHeaderDate parses the Date header and returns its value as a time.Time if valid.
+// An error is returned otherwise.
+// https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.1
+func ParseHeaderDate(headers http.Header) (time.Time, error) {
+	date := headers.Get(HeaderDate)
+	if date == "" {
+		return time.Time{}, errHeaderNoDate
+	}
+	return http.ParseTime(date)
+}
+
+// ReplaceHeader sets the values 'values' for the key 'key' in the headers 'headers'. If the key already exists, the old values
+// are preserved in a new key formatted as '<prefix>-<key>'.
+// https://www.w3.org/TR/ct-guidelines/#sec-original-headers
+func ReplaceHeader(headers http.Header, prefix, key string, values ...string) {
+	if headers == nil {
+		return
+	}
+
+	prefixedKey := prefix + "-" + key
+	for _, value := range headers.Values(key) {
+		headers.Add(prefixedKey, value)
+	}
+	headers.Del(key)
+
+	headers[http.CanonicalHeaderKey(key)] = []string{}
+	for _, value := range values {
+		headers.Add(key, value)
+	}
+}
