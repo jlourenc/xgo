@@ -12,6 +12,50 @@ import (
 	. "github.com/jlourenc/xgo/xnet/xhttp"
 )
 
+func TestHeaderExist(t *testing.T) {
+	testCases := []struct {
+		name     string
+		headers  http.Header
+		key      string
+		expected bool
+	}{
+		{
+			name: "canonicalized key exists",
+			headers: http.Header{
+				"Header-Key": []string{},
+			},
+			key:      "Header-Key",
+			expected: true,
+		},
+		{
+			name: "non-canonicalized key exists",
+			headers: http.Header{
+				"Header-Key": []string{},
+			},
+			key:      "header-key",
+			expected: true,
+		},
+		{
+			name: "key does not exist",
+			headers: http.Header{
+				"Header-Key": []string{},
+			},
+			key:      "unknown",
+			expected: false,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := HeaderExist(tc.headers, tc.key)
+
+			if tc.expected != got {
+				t.Fatalf("expected %v; got %v", tc.expected, got)
+			}
+		})
+	}
+}
+
 func TestHeaderKeyValues(t *testing.T) {
 	testCases := []struct {
 		name     string
@@ -286,6 +330,27 @@ func TestReplaceHeader(t *testing.T) {
 				"Header-Key":        []string{"val1, val2", "val3", "val4"},
 				"Prefix-Header-Key": []string{"val5, val6", "val7", "val8"},
 				"Header-Key-Copy":   []string{"val5, val6", "val7", "val8"},
+			},
+		},
+		{
+			name: "multiple prefixed headers - multiples values",
+			headers: http.Header{
+				"Prefix-Header-Key":   []string{"val50, val60", "val70", "val80"},
+				"Prefix-1-Header-Key": []string{"val51, val61", "val71", "val81"},
+				"Prefix-2-Header-Key": []string{"val52, val62", "val72", "val82"},
+				"Header-Key":          []string{"val5, val6", "val7", "val8"},
+				"Header-Key-Copy":     []string{"val5, val6", "val7", "val8"},
+			},
+			prefix: "Prefix",
+			key:    "Header-Key",
+			values: []string{"val1, val2", "val3", "val4"},
+			expected: http.Header{
+				"Header-Key":          []string{"val1, val2", "val3", "val4"},
+				"Prefix-Header-Key":   []string{"val5, val6", "val7", "val8"},
+				"Prefix-1-Header-Key": []string{"val50, val60", "val70", "val80"},
+				"Prefix-2-Header-Key": []string{"val51, val61", "val71", "val81"},
+				"Prefix-3-Header-Key": []string{"val52, val62", "val72", "val82"},
+				"Header-Key-Copy":     []string{"val5, val6", "val7", "val8"},
 			},
 		},
 	}

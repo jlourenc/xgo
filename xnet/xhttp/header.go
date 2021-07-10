@@ -9,6 +9,7 @@ package xhttp
 import (
 	"errors"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -255,6 +256,12 @@ var (
 	errHeaderNoDate = errors.New("no date header")
 )
 
+// HeaderExist returns whether the key exists in headers.
+func HeaderExist(headers http.Header, key string) bool {
+	_, ok := headers[http.CanonicalHeaderKey(key)]
+	return ok
+}
+
 // HeaderKeyValues returns all key/value pairs associated with the given key, or nil if the key does not exist.
 // It is case insensitive; textproto.CanonicalMIMEHeaderKey is used to canonicalize the provided key.
 func HeaderKeyValues(headers http.Header, key string) map[string]string {
@@ -301,22 +308,35 @@ func ParseHeaderDate(headers http.Header) (time.Time, error) {
 	return http.ParseTime(date)
 }
 
-// ReplaceHeader sets the values 'values' for the key 'key' in the headers 'headers'. If the key already exists, the old values
-// are preserved in a new key formatted as '<prefix>-<key>'.
+// ReplaceHeader sets the values for the key in the headers. If the key already exists, the old values
+// are preserved in a new key prefixed with prefix + either '-' or '-#-' (with # a strictly positive integer)
+// depending on the exitence of the prefixed keys.
 // https://www.w3.org/TR/ct-guidelines/#sec-original-headers
 func ReplaceHeader(headers http.Header, prefix, key string, values ...string) {
 	if headers == nil {
 		return
 	}
 
+	prefix = http.CanonicalHeaderKey(prefix)
+	key = http.CanonicalHeaderKey(key)
 	prefixedKey := prefix + "-" + key
-	for _, value := range headers.Values(key) {
-		headers.Add(prefixedKey, value)
-	}
-	headers.Del(key)
 
-	headers[http.CanonicalHeaderKey(key)] = []string{}
-	for _, value := range values {
-		headers.Add(key, value)
+	if v, ok := headers[prefixedKey]; ok {
+		i := 1
+		for {
+			tmp, ok := headers[prefix+"-"+strconv.Itoa(i)+"-"+key]
+			headers[prefix+"-"+strconv.Itoa(i)+"-"+key] = v
+			if !ok {
+				break
+			}
+			v = tmp
+			i++
+		}
 	}
+
+	if v, ok := headers[key]; ok {
+		headers[prefixedKey] = v
+	}
+
+	headers[http.CanonicalHeaderKey(key)] = values
 }
