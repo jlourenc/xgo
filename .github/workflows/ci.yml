@@ -41,6 +41,8 @@ jobs:
         golang: [1.14, 1.15, 1.16]
         os: [macos-latest, windows-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
+    env:
+      XGO_XERRORS_ENABLE_STACK_TRACE: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
