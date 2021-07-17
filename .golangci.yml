@@ -98,5 +98,7 @@ issues:
       linters:
         - dupl
         - funlen
+        - goconst
         - gomnd
         - ifshort
+        - lll
