@@ -178,6 +178,10 @@ type stack []uintptr
 
 // StackTracer is implemented by any value that has a StackTrace method.
 // The implementation returns a stack of Frames from innermost (newest) to outermost (oldest).
+//
+// Stack tracing is an opt-in feature of the package. To do so, either:
+// 1) set the environment variable XGO_XERRORS_ENABLE_STACK_TRACE to true, or
+// 2) call xerrors.EnableStackTrace(true) programmatically.
 type StackTracer interface {
 	StackTrace() StackTrace
 }
