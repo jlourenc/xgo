@@ -50,7 +50,7 @@ func TestHeaderExist(t *testing.T) {
 			got := HeaderExist(tc.headers, tc.key)
 
 			if tc.expected != got {
-				t.Fatalf("expected %v; got %v", tc.expected, got)
+				t.Errorf("expected %v; got %v", tc.expected, got)
 			}
 		})
 	}

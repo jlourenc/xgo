@@ -287,7 +287,7 @@ func TestWithWrap_Format(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			EnableStackTrace(tc.enableStackTrace)
-			defer EnableStackTrace(!tc.enableStackTrace)
+			defer EnableStackTrace(false)
 
 			got := fmt.Sprintf(tc.format, Wrap(tc.err, "wrapped"))
 
@@ -330,12 +330,12 @@ func TestWithWrap_StackTrace(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			EnableStackTrace(tc.enableStackTrace)
-			defer EnableStackTrace(!tc.enableStackTrace)
+			defer EnableStackTrace(false)
 
 			got := Wrap(tc.err, "wrapped").(interface{ StackTrace() StackTrace }).StackTrace()
 
 			if len(got) != tc.expectedSize {
-				t.Fatalf("expected stack trace of size %d, got %v", tc.expectedSize, got)
+				t.Errorf("expected stack trace of size %d, got %v", tc.expectedSize, got)
 			}
 		})
 	}
