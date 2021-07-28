@@ -135,7 +135,7 @@ func TestWithStack_Format(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			EnableStackTrace(tc.enableStackTrace)
-			defer EnableStackTrace(!tc.enableStackTrace)
+			defer EnableStackTrace(false)
 
 			got := fmt.Sprintf(tc.format, WithStack(tc.err))
 
