@@ -6,8 +6,10 @@ package xnet
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net"
+	"strconv"
 )
 
 // FreePort asks the kernel for a free open port, that is ready to use, on the specified Network.
@@ -37,4 +39,17 @@ func FreePort(ctx context.Context, network string, options ...ListenConfigOption
 	default:
 		return 0, fmt.Errorf("invalid network: %s", network)
 	}
+}
+
+// ParsePort parses a string representing a port.
+// If the string is not a valid port number, an error is returned.
+func ParsePort(port string, allowZero bool) (int, error) {
+	p, err := strconv.ParseUint(port, 10, 16) //nolint:gomnd // Base 10 number in range [0, 2^16-1]
+	if err != nil {
+		return 0, err
+	}
+	if p == 0 && !allowZero {
+		return 0, errors.New("0 is not a valid port number")
+	}
+	return int(p), nil
 }
