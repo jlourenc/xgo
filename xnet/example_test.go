@@ -6,6 +6,7 @@ package xnet_test
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -103,4 +104,14 @@ func ExampleFreePort() {
 	}
 
 	log.Printf("port: %d", port)
+}
+
+func ExampleParsePort() {
+	port, err := xnet.ParsePort("12001", false)
+	if err != nil {
+		log.Fatalf("Failed to parse port number: %v", err)
+	}
+
+	fmt.Printf("%d\n", port)
+	// Output: 12001
 }
