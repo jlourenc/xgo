@@ -23,14 +23,14 @@ func FreePort(ctx context.Context, network string, options ...ListenConfigOption
 
 	switch network {
 	case NetworkTCP, NetworkTCP4, NetworkTCP6:
-		listener, err := lc.Listen(ctx, network, ":0")
+		listener, err := lc.Listen(ctx, network, "localhost:0")
 		if err != nil {
 			return 0, err
 		}
 		defer listener.Close()
 		return listener.Addr().(*net.TCPAddr).Port, nil
 	case NetworkUDP, NetworkUDP4, NetworkUDP6:
-		listener, err := lc.ListenPacket(ctx, network, ":0")
+		listener, err := lc.ListenPacket(ctx, network, "localhost:0")
 		if err != nil {
 			return 0, err
 		}
