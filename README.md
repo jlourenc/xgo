@@ -1,8 +1,8 @@
 # xgo &nbsp; [![Go Reference](https://pkg.go.dev/badge/github.com/jlourenc/xgo.svg)](https://pkg.go.dev/github.com/jlourenc/xgo) [![GitHub](https://img.shields.io/github/license/jlourenc/xgo)](https://github.com/jlourenc/xgo/blob/main/LICENSE) [![CI](https://github.com/jlourenc/xgo/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/jlourenc/xgo/actions/workflows/ci.yml) [![Coverage Status](https://coveralls.io/repos/github/jlourenc/xgo/badge.svg?branch=main&service=github)](https://coveralls.io/github/jlourenc/xgo?branch=main) [![CodeQL](https://github.com/jlourenc/xgo/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/jlourenc/xgo/actions/workflows/codeql.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/jlourenc/xgo)](https://goreportcard.com/report/github.com/jlourenc/xgo)
 
-<p style="text-align:center">
+<p align="center">
   <img alt="xgo logo" src="xgo.png" height="300" />
-  <h3 style="text-align:center">Extension packages for Go</h3>
+  <h3 align="center">Extension packages for Go</h3>
 </p>
 
 `xgo` is a collection of Go packages that extend the functionalities of the Go standard library. It does not have any external dependencies besides the Go standard library, currently supported from the 1.14 version.
