@@ -265,7 +265,7 @@ func TestTimestampMilli_Local(t *testing.T) {
 		{
 			name:      "from UTC",
 			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
-			expected:  DateStampMilli(2016, time.July, 10, 21, 12, localOffset, 499, time.Local),
+			expected:  DateStampMilli(2016, time.July, 10, 21, 12, localOffset, 499, time.FixedZone("local", localOffset)),
 		},
 		{
 			name:      "from Local",
@@ -472,7 +472,7 @@ func TestTimestampMilli_UTC(t *testing.T) {
 		},
 		{
 			name:      "from Local",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.Local),
+			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.FixedZone("local", localOffset)),
 			expected:  DateStampMilli(2016, time.July, 10, 21, 12, -localOffset, 499, time.UTC),
 		},
 	}
