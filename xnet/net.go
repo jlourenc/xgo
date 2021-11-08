@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package xtime extends the Go standard library package net
+// Package xnet extends the Go standard library package net
 // by providing additional primitives and structures for network I/O.
 package xnet
 
