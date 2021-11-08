@@ -266,7 +266,7 @@ func TestTimeMilli_Local(t *testing.T) {
 		{
 			name:     "from UTC",
 			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
-			expected: DateMilli(2016, time.July, 10, 21, 12, localOffset, 499, time.Local),
+			expected: DateMilli(2016, time.July, 10, 21, 12, localOffset, 499, time.FixedZone("local", localOffset)),
 		},
 		{
 			name:     "from Local",
@@ -485,7 +485,7 @@ func TestTimeMilli_UTC(t *testing.T) {
 		},
 		{
 			name:     "from Local",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.Local),
+			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.FixedZone("local", localOffset)),
 			expected: DateMilli(2016, time.July, 10, 21, 12, -localOffset, 499, time.UTC),
 		},
 	}
