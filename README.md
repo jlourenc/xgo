@@ -12,7 +12,7 @@
 `xgo` is compatible with modern Go releases in module mode, with Go installed:
 
 ```zsh
-go get github.com/jlourenco/xgo
+go get github.com/jlourenc/xgo
 ```
 
 # Contributing
