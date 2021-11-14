@@ -97,6 +97,7 @@ issues:
     - path: _test\.go
       linters:
         - dupl
+        - errcheck
         - funlen
         - goconst
         - gomnd
