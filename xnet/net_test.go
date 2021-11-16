@@ -143,7 +143,7 @@ func handleConnections(ln net.Listener, handler func(net.Conn) error) {
 			return
 		}
 
-		handler(conn) //nolint:errcheck // error can be ignored
+		handler(conn)
 		conn.Close()
 	}
 }
