@@ -6,11 +6,10 @@ linters-settings:
     threshold: 100
   errcheck:
     check-blank: true
+    check-type-assertions: true
   funlen:
     lines: 100
     statements: 50
-  gci:
-    local-prefixes: github.com/jlourenc/xgo
   gocognit:
     min-complexity: 25
   goconst:
@@ -35,12 +34,10 @@ linters-settings:
     check-shadowing: true
   lll:
     line-length: 140
-  nestif:
-    min-complexity: 6
-  maligned:
-    suggest-new: true
   misspell:
     locale: US
+  nestif:
+    min-complexity: 6
   nolintlint:
     allow-leading-space: true # don't require machine-readable nolint directives (i.e. with no leading space)
     allow-unused: false # report any unused nolint directives
@@ -50,21 +47,23 @@ linters:
   disable-all: true
   enable:
     - asciicheck
+    - bidichk
     - bodyclose
+    - contextcheck
     - deadcode
     - depguard
     - dogsled
     - dupl
+    - durationcheck
     - errcheck
-    - exportloopref
     - exhaustive
+    - exportloopref
     - funlen
     - gocognit
     - goconst
     - gocritic
     - gocyclo
     - godot
-    - gofmt
     - goimports
     - gomnd
     - goprintffuncname
@@ -78,6 +77,7 @@ linters:
     - nakedret
     - nestif
     - nilerr
+    - nilnil
     - noctx
     - nolintlint
     - prealloc
@@ -86,6 +86,8 @@ linters:
     - structcheck
     - stylecheck
     - testpackage
+    - thelper
+    - tparallel
     - typecheck
     - unconvert
     - unparam
