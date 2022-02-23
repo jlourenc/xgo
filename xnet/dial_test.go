@@ -27,6 +27,8 @@ func listenTCP() (net.Listener, string, error) {
 }
 
 func assertDial(t *testing.T, expectedErr bool, conn net.Conn, err error) {
+	t.Helper()
+
 	if expectedErr {
 		if conn != nil {
 			t.Errorf("expected no connection, got %v", conn)

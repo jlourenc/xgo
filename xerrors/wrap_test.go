@@ -116,6 +116,7 @@ func TestWrap(t *testing.T) {
 			name: "nil",
 			err:  nil,
 			assert: func(t *testing.T, err error) {
+				t.Helper()
 				if err != nil {
 					t.Errorf("expected nil, got %#v", err)
 				}
@@ -125,6 +126,7 @@ func TestWrap(t *testing.T) {
 			name: "stack error",
 			err:  stackError{},
 			assert: func(t *testing.T, err error) {
+				t.Helper()
 				if errors.Unwrap(err) == nil || !errors.As(err, &stackError{}) || err.Error() != "wrap: stack error" {
 					t.Errorf("expected %#v, got %#v", stackError{}, err)
 				}
@@ -134,6 +136,7 @@ func TestWrap(t *testing.T) {
 			name: "unstack error",
 			err:  unstackError{},
 			assert: func(t *testing.T, err error) {
+				t.Helper()
 				if errors.Unwrap(err) == nil || !errors.As(err, &unstackError{}) || err.Error() != "wrap: unstack error" {
 					t.Errorf("expected %#v, got %#v", stackError{}, err)
 				}
@@ -160,6 +163,7 @@ func TestWrapf(t *testing.T) {
 			name: "nil",
 			err:  nil,
 			assert: func(t *testing.T, err error) {
+				t.Helper()
 				if err != nil {
 					t.Errorf("expected nil, got %#v", err)
 				}
@@ -169,6 +173,7 @@ func TestWrapf(t *testing.T) {
 			name: "stack error",
 			err:  stackError{},
 			assert: func(t *testing.T, err error) {
+				t.Helper()
 				if errors.Unwrap(err) == nil || !errors.As(err, &stackError{}) || err.Error() != "wrap: stack error" {
 					t.Errorf("expected %#v, got %#v", stackError{}, err)
 				}
@@ -178,6 +183,7 @@ func TestWrapf(t *testing.T) {
 			name: "unstack error",
 			err:  unstackError{},
 			assert: func(t *testing.T, err error) {
+				t.Helper()
 				if errors.Unwrap(err) == nil || !errors.As(err, &unstackError{}) || err.Error() != "wrap: unstack error" {
 					t.Errorf("expected %#v, got %#v", stackError{}, err)
 				}
