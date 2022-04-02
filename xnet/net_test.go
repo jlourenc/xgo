@@ -22,6 +22,7 @@ func TestConn_Read(t *testing.T) {
 		{
 			name: "connection already closed",
 			setup: func(t *testing.T) (net.Listener, net.Conn) {
+				t.Helper()
 				ln, conn := dialTCPWithReadHandler(t, DialReadTimeout(5*time.Second))
 				conn.Close()
 				return ln, conn
@@ -31,6 +32,7 @@ func TestConn_Read(t *testing.T) {
 		{
 			name: "no read timeout",
 			setup: func(t *testing.T) (net.Listener, net.Conn) {
+				t.Helper()
 				return dialTCPWithReadHandler(t)
 			},
 			expectedErr: false,
@@ -38,6 +40,7 @@ func TestConn_Read(t *testing.T) {
 		{
 			name: "with negative read timeout",
 			setup: func(t *testing.T) (net.Listener, net.Conn) {
+				t.Helper()
 				return dialTCPWithReadHandler(t, DialReadTimeout(-5*time.Second))
 			},
 			expectedErr: true,
@@ -45,6 +48,7 @@ func TestConn_Read(t *testing.T) {
 		{
 			name: "with positive read timeout",
 			setup: func(t *testing.T) (net.Listener, net.Conn) {
+				t.Helper()
 				return dialTCPWithReadHandler(t, DialReadTimeout(5*time.Second))
 			},
 			expectedErr: false,
@@ -75,6 +79,7 @@ func TestConn_Write(t *testing.T) {
 		{
 			name: "connection already closed",
 			setup: func(t *testing.T) (net.Listener, net.Conn) {
+				t.Helper()
 				ln, conn := dialTCPWithWriteHandler(t, DialWriteTimeout(5*time.Second))
 				conn.Close()
 				return ln, conn
@@ -84,6 +89,7 @@ func TestConn_Write(t *testing.T) {
 		{
 			name: "no write timeout",
 			setup: func(t *testing.T) (net.Listener, net.Conn) {
+				t.Helper()
 				return dialTCPWithWriteHandler(t)
 			},
 			expectedErr: false,
@@ -91,6 +97,7 @@ func TestConn_Write(t *testing.T) {
 		{
 			name: "with negative write timeout",
 			setup: func(t *testing.T) (net.Listener, net.Conn) {
+				t.Helper()
 				return dialTCPWithWriteHandler(t, DialWriteTimeout(-5*time.Second))
 			},
 			expectedErr: true,
@@ -98,6 +105,7 @@ func TestConn_Write(t *testing.T) {
 		{
 			name: "with positive write timeout",
 			setup: func(t *testing.T) (net.Listener, net.Conn) {
+				t.Helper()
 				return dialTCPWithWriteHandler(t, DialWriteTimeout(5*time.Second))
 			},
 			expectedErr: false,
@@ -119,6 +127,8 @@ func TestConn_Write(t *testing.T) {
 }
 
 func assertOperation(t *testing.T, expectedErr bool, n int, err error) {
+	t.Helper()
+
 	if expectedErr {
 		if n != 0 {
 			t.Errorf("expected no bytes, got %d bytes", n)
@@ -166,6 +176,8 @@ func dialTCP(handler func(net.Conn) error, options ...DialOption) (net.Listener,
 }
 
 func dialTCPWithReadHandler(t *testing.T, options ...DialOption) (net.Listener, net.Conn) {
+	t.Helper()
+
 	ln, conn, err := dialTCP(func(conn net.Conn) error {
 		_, err := conn.Write([]byte("pong"))
 		return err
@@ -177,6 +189,8 @@ func dialTCPWithReadHandler(t *testing.T, options ...DialOption) (net.Listener, 
 }
 
 func dialTCPWithWriteHandler(t *testing.T, options ...DialOption) (net.Listener, net.Conn) {
+	t.Helper()
+
 	ln, conn, err := dialTCP(func(conn net.Conn) error {
 		_, err := conn.Read(make([]byte, 4))
 		return err

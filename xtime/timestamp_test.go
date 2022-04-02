@@ -5,6 +5,7 @@
 package xtime_test
 
 import (
+	"bytes"
 	"testing"
 	"time"
 
@@ -309,7 +310,7 @@ func TestTimestampMilli_MarshalJSON(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			gotBytes, gotErr := tc.timestamp.MarshalJSON()
 
-			if string(tc.expectedBytes) != string(gotBytes) {
+			if !bytes.Equal(tc.expectedBytes, gotBytes) {
 				t.Errorf("expected bytes %s; got %s", tc.expectedBytes, gotBytes)
 			}
 
@@ -346,7 +347,7 @@ func TestTimestampMilli_MarshalText(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			gotBytes, gotErr := tc.timestamp.MarshalText()
 
-			if string(tc.expectedBytes) != string(gotBytes) {
+			if !bytes.Equal(tc.expectedBytes, gotBytes) {
 				t.Errorf("expected bytes %s; got %s", tc.expectedBytes, gotBytes)
 			}
 

@@ -32,6 +32,7 @@ func TestWithStack(t *testing.T) {
 			name: "nil",
 			err:  nil,
 			assert: func(t *testing.T, err error) {
+				t.Helper()
 				if err != nil {
 					t.Errorf("expected nil, got %#v", err)
 				}
@@ -41,6 +42,7 @@ func TestWithStack(t *testing.T) {
 			name: "stack error",
 			err:  stackError{},
 			assert: func(t *testing.T, err error) {
+				t.Helper()
 				if errors.Unwrap(err) != nil || !errors.As(err, &stackError{}) {
 					t.Errorf("expected %#v, got %#v", stackError{}, err)
 				}
@@ -50,6 +52,7 @@ func TestWithStack(t *testing.T) {
 			name: "unstack error",
 			err:  unstackError{},
 			assert: func(t *testing.T, err error) {
+				t.Helper()
 				if errors.Unwrap(err) == nil || !errors.As(err, &unstackError{}) {
 					t.Errorf("expected %#v, got %#v", stackError{}, err)
 				}
