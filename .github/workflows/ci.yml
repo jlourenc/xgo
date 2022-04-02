@@ -8,54 +8,39 @@ on:
       - main
   pull_request:
 jobs:
-  # Check if there any dirty change for go mod tidy
-  go-mod:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.17
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Check go mod
-        run: |
-          go mod tidy
-          git diff --exit-code go.mod
   # linters
   golangci-lint:
     name: lint
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v2.5.2
+      - name: Install Go
+        uses: actions/setup-go@v3
         with:
-          version: v1.44
+          go-version: 1.18
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.45
   # tests
   go-test:
     needs: golangci-lint
     strategy:
+      fail-fast: false
       matrix:
-        golang: [1.16, 1.17]
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        golang: [1.16, 1.17, 1.18]
+        os: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     env:
       XGO_XERRORS_ENABLE_STACK_TRACE: true
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
       - name: Install Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.golang }}
-      - uses: actions/cache@v2.1.6
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ matrix.golang }}-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-${{ matrix.golang }}-
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name: Run tests
         run: go test -v --race -coverprofile=covprofile ./...
       - name: Send coverage
