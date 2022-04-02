@@ -1,4 +1,4 @@
-// Copyright 2021 Jérémy Lourenço. All rights reserved.
+// Copyright 2022 Jérémy Lourenço. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
