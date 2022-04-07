@@ -7,10 +7,18 @@ on:
     branches:
       - main
   pull_request:
+  pull_request_target:
 jobs:
+  # coverage
+  cover:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: shogo82148/actions-goveralls@v1
+        with:
+          parallel-finished: true
   # linters
-  golangci-lint:
-    name: lint
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Install Go
@@ -23,9 +31,20 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           version: v1.45
+  # semantic pull request
+  semantic-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          requireScope: true
+          validateSingleCommit: true
+          validateSingleCommitMatchesPrTitle:
   # tests
-  go-test:
-    needs: golangci-lint
+  test:
+    needs: lint
     strategy:
       fail-fast: false
       matrix:
@@ -49,10 +68,3 @@ jobs:
           path-to-profile: covprofile
           flag-name: ${{ runner.os }}-go-${{ matrix.golang }}
           parallel: true
-  finish:
-    needs: go-test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: shogo82148/actions-goveralls@v1
-        with:
-          parallel-finished: true
