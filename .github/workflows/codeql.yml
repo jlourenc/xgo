@@ -1,5 +1,5 @@
 ---
-name: "CodeQL"
+name: CodeQL
 on:
   push:
     branches: [ main ]
@@ -9,7 +9,8 @@ on:
     - cron: '47 8 * * 1'
 jobs:
   analyze:
-    name: Analyze
+    permissions:
+      security-events: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
