@@ -1,0 +1,24 @@
+---
+name: Release
+on:
+  push:
+    branches: [ main ]
+jobs:
+  # semantic versioning
+  semver:
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Semantic release
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          branches: [ main ]
+          dry_run: true
+          semantic_version: v19
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
