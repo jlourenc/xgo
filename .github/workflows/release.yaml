@@ -16,11 +16,11 @@ jobs:
         uses: actions/checkout@v3
       - name: Semantic release
         uses: cycjimmy/semantic-release-action@v3
-        extra_plugins: |
-          conventional-changelog-conventionalcommits@v4
         with:
           branches: '[ "main" ]'
           dry_run: true
+          extra_plugins: |
+            conventional-changelog-conventionalcommits@v4
           semantic_version: v19
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
