@@ -17,7 +17,7 @@ jobs:
       - name: Semantic release
         uses: cycjimmy/semantic-release-action@v3
         with:
-          branches: [ main ]
+          branches: [ 'main' ]
           dry_run: true
           semantic_version: v19
         env:
