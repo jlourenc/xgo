@@ -18,7 +18,8 @@ jobs:
         uses: cycjimmy/semantic-release-action@v3
         with:
           branches: '[ "main" ]'
-          dry_run: true
+          extra_plugins: |
+            conventional-changelog-conventionalcommits@v4
           semantic_version: v19
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
