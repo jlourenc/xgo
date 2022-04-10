@@ -16,6 +16,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Semantic release
         uses: cycjimmy/semantic-release-action@v3
+        extra_plugins: |
+          conventional-changelog-conventionalcommits@v4
         with:
           branches: '[ "main" ]'
           dry_run: true
