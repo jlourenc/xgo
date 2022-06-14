@@ -30,6 +30,11 @@ linters-settings:
     settings:
       mnd:
         checks: argument,case,condition,operation,return,assign
+        ignored-numbers:
+          - '2'
+          - '10'
+          - '10.0'
+          - '64'
   gomodguard:
     allowed:
       modules: []

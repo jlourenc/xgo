@@ -115,7 +115,7 @@ func (t TimeMilli) MarshalJSON() ([]byte, error) {
 		return nil, errors.New("TimeMilli.MarshalJSON: year outside of range [0,9999]")
 	}
 
-	b := make([]byte, 0, len(RFC3339Milli)+2) //nolint:gomnd // Extra 2 double quotes.
+	b := make([]byte, 0, len(RFC3339Milli)+2)
 	b = append(b, '"')
 	b = t.AppendFormat(b, RFC3339Milli)
 	b = append(b, '"')
@@ -185,7 +185,7 @@ func (t *TimeMilli) UnmarshalJSON(data []byte) error {
 		e--
 	}
 
-	if i, err := strconv.ParseInt(string(data[b:e+1]), 10, 64); err == nil { //nolint:gomnd // Decimal (base-10) integer.
+	if i, err := strconv.ParseInt(string(data[b:e+1]), 10, 64); err == nil {
 		*t = UnixMilli(0, i)
 		return nil
 	}
@@ -200,7 +200,7 @@ func (t *TimeMilli) UnmarshalJSON(data []byte) error {
 //
 // See time.Time.UnmarshalText for more information.
 func (t *TimeMilli) UnmarshalText(data []byte) error {
-	if i, err := strconv.ParseInt(string(data), 10, 64); err == nil { //nolint:gomnd // Decimal (base-10) integer.
+	if i, err := strconv.ParseInt(string(data), 10, 64); err == nil {
 		*t = UnixMilli(0, i)
 		return nil
 	}

@@ -98,13 +98,13 @@ func (t TimestampMilli) Local() TimestampMilli {
 // MarshalJSON implements the json.Marshaler interface.
 // The timestamp is a Unix timestamp with millisecond precision.
 func (t TimestampMilli) MarshalJSON() ([]byte, error) {
-	return []byte(strconv.FormatInt(t.UnixMilli(), 10)), nil //nolint:gomnd // Decimal (base-10) integer.
+	return []byte(strconv.FormatInt(t.UnixMilli(), 10)), nil
 }
 
 // MarshalText implements the encoding.TextMarshaler interface.
 // The timestamp is a Unix timestamp with millisecond precision.
 func (t TimestampMilli) MarshalText() ([]byte, error) {
-	return []byte(strconv.FormatInt(t.UnixMilli(), 10)), nil //nolint:gomnd // Decimal (base-10) integer.
+	return []byte(strconv.FormatInt(t.UnixMilli(), 10)), nil
 }
 
 // Millisecond returns the millisecond offset within the second specified by t,
@@ -159,7 +159,7 @@ func (t *TimestampMilli) UnmarshalJSON(data []byte) error {
 		e--
 	}
 
-	if i, err := strconv.ParseInt(string(data[b:e+1]), 10, 64); err == nil { //nolint:gomnd // Decimal (base-10) integer.
+	if i, err := strconv.ParseInt(string(data[b:e+1]), 10, 64); err == nil {
 		*t = UnixStampMilli(0, i)
 		return nil
 	}
@@ -174,7 +174,7 @@ func (t *TimestampMilli) UnmarshalJSON(data []byte) error {
 //
 // See time.Time.UnmarshalText for more information.
 func (t *TimestampMilli) UnmarshalText(data []byte) error {
-	if i, err := strconv.ParseInt(string(data), 10, 64); err == nil { //nolint:gomnd // Decimal (base-10) integer.
+	if i, err := strconv.ParseInt(string(data), 10, 64); err == nil {
 		*t = UnixStampMilli(0, i)
 		return nil
 	}
