@@ -1,3 +1,3 @@
 module github.com/jlourenc/xgo
 
-go 1.16
+go 1.18

@@ -5,7 +5,10 @@
   <h3 align="center">Extension packages for Go</h3>
 </p>
 
-`xgo` is a collection of Go packages that extend the functionalities of the Go standard library. It does not have any external dependencies besides the Go standard library, currently supported from the 1.16 version.
+`xgo` is a collection of Go packages that extend the functionalities of the Go standard library. It does not have any external dependencies besides the Go standard library.
+
+Following [Go Release Policy](https://go.dev/doc/devel/release), each major Go release is supported until there are two newer major releases.
+Other major releases may still be compatible, however compatibility is not verified nor guaranteed.
 
 # Installation
 
