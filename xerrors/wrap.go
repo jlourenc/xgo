@@ -42,7 +42,7 @@ func As(err error, target interface{}) bool {
 // An error type might provide an Is method so it can be treated as equivalent
 // to an existing error. For example, if MyError defines
 //
-//		func (m MyError) Is(target error) bool { return target == fs.ErrExist }
+//	func (m MyError) Is(target error) bool { return target == fs.ErrExist }
 //
 // then Is(MyError{}, fs.ErrExist) returns true. See syscall.Errno.Is for
 // an example in the standard library.

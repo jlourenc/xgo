@@ -25,7 +25,6 @@ const (
 // * Compare function cmp should return +1 if the value at index i is lower than the searched value.
 //
 // Exist calls cmp(i) only for i in the range [0, n).
-//
 func Exist(n int, cmp func(int) int) bool {
 	if n < minSizeForBinarySearch { // linear search
 		for i := 0; i < n; i++ {
@@ -57,7 +56,6 @@ func Exist(n int, cmp func(int) int) bool {
 
 // ExistInts returns whether or not x exists in a sorted slice of ints.
 // The slice must be sorted in ascending order.
-//
 func ExistInts(a []int, x int) bool {
 	return Exist(len(a), func(i int) int {
 		if a[i] == x {
@@ -72,7 +70,6 @@ func ExistInts(a []int, x int) bool {
 
 // ExistFloat64s returns whether or not x exists in a sorted slice of float64s.
 // The slice must be sorted in ascending order.
-//
 func ExistFloat64s(a []float64, x float64) bool {
 	return Exist(len(a), func(i int) int {
 		if a[i] == x {
@@ -87,7 +84,6 @@ func ExistFloat64s(a []float64, x float64) bool {
 
 // ExistStrings returns whether or not x exists in a sorted slice of strings.
 // The slice must be sorted in ascending order.
-//
 func ExistStrings(a []string, x string) bool {
 	return Exist(len(a), func(i int) int {
 		if a[i] == x {
