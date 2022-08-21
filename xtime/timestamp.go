@@ -20,7 +20,9 @@ type TimestampMilli struct {
 }
 
 // DateStampMilli returns the TimestampMilli corresponding to
+//
 //	yyyy-mm-dd hh:mm:ss + msec milliseconds
+//
 // in the appropriate zone for that timestamp in the given location.
 //
 // See time.Date for more information.

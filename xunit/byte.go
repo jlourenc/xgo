@@ -73,19 +73,20 @@ var (
 
 // Parse parses a byte string which is a number followed by a byte unit suffix (e.g. '1024MB' or '1GiB').
 // The following units are available:
-//		B:   Byte
-//		KB:  Kilobyte
-//		KiB: Kibibyte
-//		MB:  Megabyte
-//		MiB: Mebibyte
-//		GB:  Gigabyte
-//		GiB: Gibibyte
-//		TB:  Terabyte
-//		TiB: Tebibyte
-//		PB:  Petabyte
-//		PiB: Pebibbyte
-//		EB:  Exabyte
-//		EiB: Exbibyte
+//
+//	B:   Byte
+//	KB:  Kilobyte
+//	KiB: Kibibyte
+//	MB:  Megabyte
+//	MiB: Mebibyte
+//	GB:  Gigabyte
+//	GiB: Gibibyte
+//	TB:  Terabyte
+//	TiB: Tebibyte
+//	PB:  Petabyte
+//	PiB: Pebibbyte
+//	EB:  Exabyte
+//	EiB: Exbibyte
 func ParseByte(s string) (Byte, error) {
 	s = strings.TrimSpace(s)
 

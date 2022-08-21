@@ -31,7 +31,9 @@ type TimeMilli struct {
 }
 
 // DateMilli returns the TimeMilli corresponding to
+//
 //	yyyy-mm-dd hh:mm:ss + msec milliseconds
+//
 // in the appropriate zone for that time in the given location.
 //
 // See time.Date for more information.
@@ -208,6 +210,7 @@ func (t *TimeMilli) UnmarshalText(data []byte) error {
 }
 
 // norm returns nhi, nlo such that
+//
 //	hi * base + lo == nhi * base + nlo
 //	0 <= nlo < base
 func norm(hi, lo, base int) (nhi, nlo int) {
