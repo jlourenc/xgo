@@ -20,7 +20,10 @@ func ExampleDrainClose() {
 		log.Fatalf("Failed to drain and close ReadCloser: %v", err)
 	}
 
-	log.Print("ReadCloser drained and closed")
+	b, _ := io.ReadAll(rc)
+
+	fmt.Printf("%s\n", b)
+	// Output:
 }
 
 func ExampleDuplicateReader() {

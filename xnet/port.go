@@ -44,7 +44,7 @@ func FreePort(ctx context.Context, network string, options ...ListenConfigOption
 // ParsePort parses a string representing a port.
 // If the string is not a valid port number, an error is returned.
 func ParsePort(port string, allowZero bool) (int, error) {
-	p, err := strconv.ParseUint(port, 10, 16) //nolint:gomnd // Base 10 number in range [0, 2^16-1]
+	p, err := strconv.ParseUint(port, 10, 16) // base 10 number in range [0, 2^16-1]
 	if err != nil {
 		return 0, err
 	}

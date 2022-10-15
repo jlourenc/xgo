@@ -1,7 +1,4 @@
 linters-settings:
-  depguard:
-    list-type: allowlist
-    include-go-root: false
   dupl:
     threshold: 100
   errcheck:
@@ -10,8 +7,6 @@ linters-settings:
   funlen:
     lines: 100
     statements: 50
-  gocognit:
-    min-complexity: 25
   goconst:
     min-len: 2
     min-occurrences: 2
@@ -24,40 +19,59 @@ linters-settings:
       - style
   gocyclo:
     min-complexity: 15
+  godot:
+    capital: true
+  goheader:
+    template: |-
+      Copyright {{ YEAR }} Jérémy Lourenço. All rights reserved.
+      Use of this source code is governed by a BSD-style
+      license that can be found in the LICENSE file.
   goimports:
     local-prefixes: github.com/jlourenc/xgo
   gomnd:
-    settings:
-      mnd:
-        checks: argument,case,condition,operation,return,assign
-        ignored-numbers:
-          - '2'
-          - '10'
-          - '10.0'
-          - '64'
+    ignored-numbers:
+      - '2'
+      - '10'
+      - '10.0'
+      - '16'
+      - '32'
+      - '64'
   gomodguard:
     allowed:
       modules: []
       domains: []
   gosimple:
-    go: 1.19
     checks: [all]
+    settings:
+      shadow:
+        strict: true
   govet:
     check-shadowing: true
   lll:
     line-length: 140
   misspell:
     locale: US
-  nestif:
-    min-complexity: 6
   nolintlint:
-    allow-leading-space: true # don't require machine-readable nolint directives (i.e. with no leading space)
-    allow-unused: false # report any unused nolint directives
-    require-explanation: false # don't require an explanation for nolint directives
-    require-specific: false # don't require nolint directives to be specific about which linter is being skipped
+    require-explanation: true
+    require-specific: true
+  prealloc:
+    for-loops: true
   staticcheck:
-    go: 1.19
     checks: [all]
+  stylecheck:
+    checks: [all]
+    http-status-code-whitelist: []
+  tenv:
+    all: true
+  usestdlibvars:
+    constant-kind: true
+    crypto-hash: true
+    default-rpc-path: true
+    os-dev-null: true
+    sql-isolation-level: true
+    time-layout: true
+    time-month: true
+    tls-signature-scheme: true
 linters:
   disable-all: true
   enable:
@@ -66,21 +80,21 @@ linters:
     - bodyclose
     - containedctx
     - contextcheck
-    - deadcode
     - dogsled
     - dupl
     - durationcheck
     - errcheck
-    - errchkjson
+    - execinquery
     - exhaustive
     - exportloopref
+    - forbidigo
     - funlen
-    - gocognit
     - goconst
     - gocritic
     - gocyclo
     - godot
     - godox
+    - goheader
     - goimports
     - gomnd
     - gomodguard
@@ -88,7 +102,6 @@ linters:
     - gosec
     - gosimple
     - govet
-    - ifshort
     - importas
     - ineffassign
     - lll
@@ -100,12 +113,13 @@ linters:
     - nilnil
     - noctx
     - nolintlint
+    - nosprintfhostport
     - prealloc
     - predeclared
+    - reassign
     - rowserrcheck
     - sqlclosecheck
     - staticcheck
-    - structcheck
     - stylecheck
     - tagliatelle
     - tenv
@@ -116,7 +130,7 @@ linters:
     - unconvert
     - unparam
     - unused
-    - varcheck
+    - usestdlibvars
     - wastedassign
     - whitespace
 issues:
@@ -128,5 +142,4 @@ issues:
         - funlen
         - goconst
         - gomnd
-        - ifshort
         - lll

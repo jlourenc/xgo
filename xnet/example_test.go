@@ -42,6 +42,7 @@ func ExampleDialContext() {
 
 	log.Print("Connection established")
 }
+
 func ExampleDialer_Dial() {
 	d := xnet.Dialer{
 		ReadTimeout:  time.Second,
