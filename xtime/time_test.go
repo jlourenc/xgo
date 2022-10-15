@@ -93,7 +93,7 @@ func TestNowMilli(t *testing.T) {
 	time.Sleep(time.Millisecond)
 	after := time.Now()
 
-	if !got.After(before) || !after.After(got.T()) {
+	if got.Before(before) || got.After(after) {
 		t.Errorf("%s expected to be in range [%s, %s]", got, before, after)
 	}
 }

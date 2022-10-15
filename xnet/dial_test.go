@@ -29,20 +29,14 @@ func listenTCP() (net.Listener, string, error) {
 func assertDial(t *testing.T, expectedErr bool, conn net.Conn, err error) {
 	t.Helper()
 
-	if expectedErr {
-		if conn != nil {
-			t.Errorf("expected no connection, got %v", conn)
-		}
-		if err == nil {
-			t.Error("expected error, got nil")
-		}
-	} else {
-		if conn == nil {
-			t.Error("expected connection, got nil")
-		}
-		if err != nil {
-			t.Errorf("expected no error, got %s", err)
-		}
+	isErrNil := err == nil
+	if expectedErr == isErrNil {
+		t.Errorf("expected error is %t, got %v", expectedErr, err)
+	}
+
+	isConnNil := conn == nil
+	if expectedErr != isConnNil {
+		t.Errorf("expected connection is %t, got %v", !expectedErr, conn)
 	}
 }
 

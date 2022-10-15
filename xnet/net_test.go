@@ -129,20 +129,14 @@ func TestConn_Write(t *testing.T) {
 func assertOperation(t *testing.T, expectedErr bool, n int, err error) {
 	t.Helper()
 
-	if expectedErr {
-		if n != 0 {
-			t.Errorf("expected no bytes, got %d bytes", n)
-		}
-		if err == nil {
-			t.Error("expected error, got nil")
-		}
-	} else {
-		if n == 0 {
-			t.Error("expected bytes, got no bytes")
-		}
-		if err != nil {
-			t.Errorf("expected no error, got %s", err)
-		}
+	isErrNil := err == nil
+	if expectedErr == isErrNil {
+		t.Errorf("expected error is %t, got %v", expectedErr, err)
+	}
+
+	noBytes := n == 0
+	if expectedErr != noBytes {
+		t.Errorf("expected bytes is %t, got %d bytes", !expectedErr, n)
 	}
 }
 

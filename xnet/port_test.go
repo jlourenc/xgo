@@ -64,20 +64,14 @@ func TestFreePort(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			port, err := FreePort(context.Background(), tc.network, tc.options...)
 
-			if tc.expectedErr {
-				if port != 0 {
-					t.Errorf("expected 0, got %d", port)
-				}
-				if err == nil {
-					t.Error("expected an error, got nil")
-				}
-			} else {
-				if port == 0 {
-					t.Error("expected a port, got 0")
-				}
-				if err != nil {
-					t.Errorf("expected no error, got %s", err)
-				}
+			isErrNil := err == nil
+			if tc.expectedErr == isErrNil {
+				t.Errorf("expected error is %t, got %v", tc.expectedErr, err)
+			}
+
+			noPortNumber := port == 0
+			if tc.expectedErr != noPortNumber {
+				t.Errorf("expected port is %t, got %d", !tc.expectedErr, port)
 			}
 		})
 	}
