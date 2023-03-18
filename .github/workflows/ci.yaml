@@ -17,34 +17,34 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Install Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.19
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.50
+          version: v1.51
   # tests
   test:
     needs: lint
     strategy:
       fail-fast: false
       matrix:
-        golang: [1.18, 1.19]
+        golang: ['1.19', '1.20']
         os: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     env:
       XGO_XERRORS_ENABLE_STACK_TRACE: true
     steps:
-      - name: Install Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: ${{ matrix.golang }}
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.golang }}
       - name: Run tests
         run: go test -v --race -coverprofile=covprofile ./...
       - name: Send coverage
