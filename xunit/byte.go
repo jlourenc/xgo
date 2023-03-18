@@ -1,4 +1,4 @@
-// Copyright 2022 Jérémy Lourenço. All rights reserved.
+// Copyright 2023 Jérémy Lourenço. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -169,7 +169,7 @@ func (b Byte) String() string {
 		}
 
 		if checkDecimalPlaces(2, qty) {
-			return strconv.FormatFloat(qty, 'g', 53, 64) + byteUnits[unit] //nolint:gomnd // 53-bit precision
+			return strconv.FormatFloat(qty, 'g', 53, 64) + byteUnits[unit]
 		}
 	}
 

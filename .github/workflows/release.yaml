@@ -19,7 +19,7 @@ jobs:
         with:
           branches: '[ "main" ]'
           extra_plugins: |
-            conventional-changelog-conventionalcommits@v4
+            conventional-changelog-conventionalcommits@v5
           semantic_version: v19
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
