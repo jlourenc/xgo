@@ -46,6 +46,8 @@ func DimUint64(x, y uint64) uint64 {
 
 // MaxInt returns the larger of x or y
 // with x, y and the return value of type int.
+//
+// Deprecated: From Go 1.21, use the built-in max function instead.
 func MaxInt(x, y int) int {
 	if x > y {
 		return x
@@ -55,6 +57,8 @@ func MaxInt(x, y int) int {
 
 // MaxInt64 returns the larger of x or y
 // with x, y and the return value of type int64.
+//
+// Deprecated: From Go 1.21, use the built-in max function instead.
 func MaxInt64(x, y int64) int64 {
 	if x > y {
 		return x
@@ -64,6 +68,8 @@ func MaxInt64(x, y int64) int64 {
 
 // MaxUint returns the larger of x or y
 // with x, y and the return value of type uint.
+//
+// Deprecated: From Go 1.21, use the built-in max function instead.
 func MaxUint(x, y uint) uint {
 	if x > y {
 		return x
@@ -73,6 +79,8 @@ func MaxUint(x, y uint) uint {
 
 // MaxUint64 returns the larger of x or y
 // with x, y and the return value of type uint64.
+//
+// Deprecated: From Go 1.21, use the built-in max function instead.
 func MaxUint64(x, y uint64) uint64 {
 	if x > y {
 		return x
@@ -82,6 +90,8 @@ func MaxUint64(x, y uint64) uint64 {
 
 // MinInt returns the smaller of x or y
 // with x, y and the return value of type int.
+//
+// Deprecated: From Go 1.21, use the built-in min function instead.
 func MinInt(x, y int) int {
 	if x < y {
 		return x
@@ -91,6 +101,8 @@ func MinInt(x, y int) int {
 
 // MinInt64 returns the smaller of x or y
 // with x, y and the return value of type int64.
+//
+// Deprecated: From Go 1.21, use the built-in min function instead.
 func MinInt64(x, y int64) int64 {
 	if x < y {
 		return x
@@ -100,6 +112,8 @@ func MinInt64(x, y int64) int64 {
 
 // MinUint returns the smaller of x or y
 // with x, y and the return value of type uint.
+//
+// Deprecated: From Go 1.21, use the built-in min function instead.
 func MinUint(x, y uint) uint {
 	if x < y {
 		return x
@@ -109,6 +123,8 @@ func MinUint(x, y uint) uint {
 
 // MinUint64 returns the smaller of x or y
 // with x, y and the return value of type uint64.
+//
+// Deprecated: From Go 1.21, use the built-in min function instead.
 func MinUint64(x, y uint64) uint64 {
 	if x < y {
 		return x
