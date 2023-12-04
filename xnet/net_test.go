@@ -6,11 +6,12 @@ package xnet_test
 
 import (
 	"context"
+	"errors"
 	"net"
 	"testing"
 	"time"
 
-	. "github.com/jlourenc/xgo/xnet"
+	"github.com/jlourenc/xgo/xnet"
 )
 
 func TestConn_Read(t *testing.T) {
@@ -23,8 +24,10 @@ func TestConn_Read(t *testing.T) {
 			name: "connection already closed",
 			setup: func(t *testing.T) (net.Listener, net.Conn) {
 				t.Helper()
-				ln, conn := dialTCPWithReadHandler(t, DialReadTimeout(5*time.Second))
-				conn.Close()
+				ln, conn := dialTCPWithReadHandler(t, xnet.DialReadTimeout(5*time.Second))
+				if err := conn.Close(); err != nil {
+					t.Fatalf("unexpected error: %s", err)
+				}
 				return ln, conn
 			},
 			expectedErr: true,
@@ -41,7 +44,7 @@ func TestConn_Read(t *testing.T) {
 			name: "with negative read timeout",
 			setup: func(t *testing.T) (net.Listener, net.Conn) {
 				t.Helper()
-				return dialTCPWithReadHandler(t, DialReadTimeout(-5*time.Second))
+				return dialTCPWithReadHandler(t, xnet.DialReadTimeout(-5*time.Second))
 			},
 			expectedErr: true,
 		},
@@ -49,7 +52,7 @@ func TestConn_Read(t *testing.T) {
 			name: "with positive read timeout",
 			setup: func(t *testing.T) (net.Listener, net.Conn) {
 				t.Helper()
-				return dialTCPWithReadHandler(t, DialReadTimeout(5*time.Second))
+				return dialTCPWithReadHandler(t, xnet.DialReadTimeout(5*time.Second))
 			},
 			expectedErr: false,
 		},
@@ -80,8 +83,10 @@ func TestConn_Write(t *testing.T) {
 			name: "connection already closed",
 			setup: func(t *testing.T) (net.Listener, net.Conn) {
 				t.Helper()
-				ln, conn := dialTCPWithWriteHandler(t, DialWriteTimeout(5*time.Second))
-				conn.Close()
+				ln, conn := dialTCPWithWriteHandler(t, xnet.DialWriteTimeout(5*time.Second))
+				if err := conn.Close(); err != nil {
+					t.Fatalf("unexpected error: %s", err)
+				}
 				return ln, conn
 			},
 			expectedErr: true,
@@ -98,7 +103,7 @@ func TestConn_Write(t *testing.T) {
 			name: "with negative write timeout",
 			setup: func(t *testing.T) (net.Listener, net.Conn) {
 				t.Helper()
-				return dialTCPWithWriteHandler(t, DialWriteTimeout(-5*time.Second))
+				return dialTCPWithWriteHandler(t, xnet.DialWriteTimeout(-5*time.Second))
 			},
 			expectedErr: true,
 		},
@@ -106,7 +111,7 @@ func TestConn_Write(t *testing.T) {
 			name: "with positive write timeout",
 			setup: func(t *testing.T) (net.Listener, net.Conn) {
 				t.Helper()
-				return dialTCPWithWriteHandler(t, DialWriteTimeout(5*time.Second))
+				return dialTCPWithWriteHandler(t, xnet.DialWriteTimeout(5*time.Second))
 			},
 			expectedErr: false,
 		},
@@ -126,71 +131,81 @@ func TestConn_Write(t *testing.T) {
 	}
 }
 
-func assertOperation(t *testing.T, expectedErr bool, n int, err error) {
-	t.Helper()
+func assertOperation(tb testing.TB, expectedErr bool, n int, err error) {
+	tb.Helper()
 
 	isErrNil := err == nil
 	if expectedErr == isErrNil {
-		t.Errorf("expected error is %t, got %v", expectedErr, err)
+		tb.Errorf("expected error is %t, got %v", expectedErr, err)
 	}
 
 	noBytes := n == 0
 	if expectedErr != noBytes {
-		t.Errorf("expected bytes is %t, got %d bytes", !expectedErr, n)
+		tb.Errorf("expected bytes is %t, got %d bytes", !expectedErr, n)
 	}
 }
 
-func handleConnections(ln net.Listener, handler func(net.Conn) error) {
+func handleConnections(tb testing.TB, ln net.Listener, handler func(net.Conn) error) {
+	tb.Helper()
+
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
 			return
 		}
 
-		handler(conn)
-		conn.Close()
+		if err := handler(conn); err != nil {
+			tb.Logf("connection handling error: %s", err)
+		}
+		if err := conn.Close(); err != nil {
+			tb.Logf("connection closure error: %s", err)
+		}
 	}
 }
 
-func dialTCP(handler func(net.Conn) error, options ...DialOption) (net.Listener, net.Conn, error) {
+func dialTCP(tb testing.TB, handler func(net.Conn) error, options ...xnet.DialOption) (net.Listener, net.Conn, error) {
+	tb.Helper()
+
 	ln, port, err := listenTCP()
 	if err != nil {
 		return nil, nil, err
 	}
 
-	go handleConnections(ln, handler)
+	go handleConnections(tb, ln, handler)
 
-	conn, err := DialContext(context.Background(), NetworkTCP, net.JoinHostPort("127.0.0.1", port), options...)
+	conn, err := xnet.DialContext(context.Background(), xnet.NetworkTCP, net.JoinHostPort("127.0.0.1", port), options...)
 	if err != nil {
-		ln.Close()
+		if cerr := ln.Close(); cerr != nil {
+			return nil, nil, errors.Join(err, cerr)
+		}
 		return nil, nil, err
 	}
 
 	return ln, conn, nil
 }
 
-func dialTCPWithReadHandler(t *testing.T, options ...DialOption) (net.Listener, net.Conn) {
-	t.Helper()
+func dialTCPWithReadHandler(tb testing.TB, options ...xnet.DialOption) (net.Listener, net.Conn) {
+	tb.Helper()
 
-	ln, conn, err := dialTCP(func(conn net.Conn) error {
+	ln, conn, err := dialTCP(tb, func(conn net.Conn) error {
 		_, err := conn.Write([]byte("pong"))
 		return err
 	}, options...)
 	if err != nil {
-		t.Fatal(err)
+		tb.Fatal(err)
 	}
 	return ln, conn
 }
 
-func dialTCPWithWriteHandler(t *testing.T, options ...DialOption) (net.Listener, net.Conn) {
-	t.Helper()
+func dialTCPWithWriteHandler(tb testing.TB, options ...xnet.DialOption) (net.Listener, net.Conn) {
+	tb.Helper()
 
-	ln, conn, err := dialTCP(func(conn net.Conn) error {
+	ln, conn, err := dialTCP(tb, func(conn net.Conn) error {
 		_, err := conn.Read(make([]byte, 4))
 		return err
 	}, options...)
 	if err != nil {
-		t.Fatal(err)
+		tb.Fatal(err)
 	}
 	return ln, conn
 }

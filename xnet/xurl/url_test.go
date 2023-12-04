@@ -7,7 +7,7 @@ package xurl_test
 import (
 	"testing"
 
-	. "github.com/jlourenc/xgo/xnet/xurl"
+	"github.com/jlourenc/xgo/xnet/xurl"
 )
 
 func TestJoinBasePath(t *testing.T) {
@@ -45,7 +45,7 @@ func TestJoinBasePath(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := JoinBasePath(tc.base, tc.elems...)
+			got := xurl.JoinBasePath(tc.base, tc.elems...)
 
 			if tc.expected != got {
 				t.Errorf("expected %v; got %v", tc.expected, got)
@@ -84,7 +84,7 @@ func TestJoinPath(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := JoinPath(tc.elems...)
+			got := xurl.JoinPath(tc.elems...)
 
 			if tc.expected != got {
 				t.Errorf("expected %v; got %v", tc.expected, got)

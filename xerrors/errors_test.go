@@ -7,7 +7,7 @@ package xerrors_test
 import (
 	"testing"
 
-	. "github.com/jlourenc/xgo/xerrors"
+	"github.com/jlourenc/xgo/xerrors"
 )
 
 func TestNew(t *testing.T) {
@@ -30,7 +30,7 @@ func TestNew(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := New(tc.message)
+			got := xerrors.New(tc.message)
 
 			if tc.expected != got.Error() {
 				t.Errorf("expected %s; got %s", tc.expected, got)
@@ -43,7 +43,7 @@ func TestNewf(t *testing.T) {
 	testCases := []struct {
 		name     string
 		format   string
-		args     []interface{}
+		args     []any
 		expected string
 	}{
 		{
@@ -55,14 +55,14 @@ func TestNewf(t *testing.T) {
 		{
 			name:     "non-empty format",
 			format:   "a %s message",
-			args:     []interface{}{"non-empty"},
+			args:     []any{"non-empty"},
 			expected: "a non-empty message",
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := Newf(tc.format, tc.args...)
+			got := xerrors.Newf(tc.format, tc.args...)
 
 			if tc.expected != got.Error() {
 				t.Errorf("expected %s; got %s", tc.expected, got)

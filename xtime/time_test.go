@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	. "github.com/jlourenc/xgo/xtime"
+	"github.com/jlourenc/xgo/xtime"
 )
 
 func TestDateMilli(t *testing.T) {
@@ -78,7 +78,7 @@ func TestDateMilli(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := DateMilli(tc.year, tc.month, tc.day, tc.hour, tc.min, tc.sec, tc.msec, tc.loc)
+			got := xtime.DateMilli(tc.year, tc.month, tc.day, tc.hour, tc.min, tc.sec, tc.msec, tc.loc)
 			if !tc.expected.Equal(got.T()) {
 				t.Errorf("expected %s; got %s", tc.expected, got)
 			}
@@ -89,7 +89,7 @@ func TestDateMilli(t *testing.T) {
 func TestNowMilli(t *testing.T) {
 	before := time.Now()
 	time.Sleep(time.Millisecond)
-	got := NowMilli()
+	got := xtime.NowMilli()
 	time.Sleep(time.Millisecond)
 	after := time.Now()
 
@@ -100,7 +100,7 @@ func TestNowMilli(t *testing.T) {
 
 func TestToMilli(t *testing.T) {
 	expected := time.Now()
-	got := ToMilli(expected)
+	got := xtime.ToMilli(expected)
 
 	if !got.Equal(expected) {
 		t.Errorf("expected %s; got %s", expected, got)
@@ -136,7 +136,7 @@ func TestUnixMilli(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := UnixMilli(tc.sec, tc.msec)
+			got := xtime.UnixMilli(tc.sec, tc.msec)
 			if !tc.expected.Equal(got.T()) {
 				t.Errorf("expected %s; got %s", tc.expected, got)
 			}
@@ -147,27 +147,27 @@ func TestUnixMilli(t *testing.T) {
 func TestTimeMilli_Add(t *testing.T) {
 	testCases := []struct {
 		name     string
-		time     TimeMilli
+		time     xtime.TimeMilli
 		duration time.Duration
-		expected TimeMilli
+		expected xtime.TimeMilli
 	}{
 		{
 			name:     "zero duration",
-			time:     UnixMilli(1468181520, 499),
+			time:     xtime.UnixMilli(1468181520, 499),
 			duration: 0,
-			expected: UnixMilli(1468181520, 499),
+			expected: xtime.UnixMilli(1468181520, 499),
 		},
 		{
 			name:     "positive duration",
-			time:     UnixMilli(1468181520, 499),
+			time:     xtime.UnixMilli(1468181520, 499),
 			duration: 20 * time.Second,
-			expected: UnixMilli(1468181540, 499),
+			expected: xtime.UnixMilli(1468181540, 499),
 		},
 		{
 			name:     "negative duration",
-			time:     UnixMilli(1468181520, 499),
+			time:     xtime.UnixMilli(1468181520, 499),
 			duration: -20 * time.Second,
-			expected: UnixMilli(1468181500, 499),
+			expected: xtime.UnixMilli(1468181500, 499),
 		},
 	}
 
@@ -184,35 +184,35 @@ func TestTimeMilli_Add(t *testing.T) {
 func TestTimeMilli_AddDate(t *testing.T) {
 	testCases := []struct {
 		name     string
-		time     TimeMilli
+		time     xtime.TimeMilli
 		years    int
 		months   int
 		days     int
-		expected TimeMilli
+		expected xtime.TimeMilli
 	}{
 		{
 			name:     "zero values",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			time:     xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			years:    0,
 			months:   0,
 			days:     0,
-			expected: DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			expected: xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 		},
 		{
 			name:     "no overflow values",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			time:     xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			years:    3,
 			months:   2,
 			days:     1,
-			expected: DateMilli(2019, time.September, 11, 21, 12, 0, 499, time.UTC),
+			expected: xtime.DateMilli(2019, time.September, 11, 21, 12, 0, 499, time.UTC),
 		},
 		{
 			name:     "with overflow values",
-			time:     DateMilli(2016, time.December, 31, 21, 12, 0, 499, time.UTC),
+			time:     xtime.DateMilli(2016, time.December, 31, 21, 12, 0, 499, time.UTC),
 			years:    1,
 			months:   1,
 			days:     1,
-			expected: DateMilli(2018, time.February, 1, 21, 12, 0, 499, time.UTC),
+			expected: xtime.DateMilli(2018, time.February, 1, 21, 12, 0, 499, time.UTC),
 		},
 	}
 
@@ -229,21 +229,21 @@ func TestTimeMilli_AddDate(t *testing.T) {
 func TestTimeMilli_In(t *testing.T) {
 	testCases := []struct {
 		name     string
-		time     TimeMilli
+		time     xtime.TimeMilli
 		location *time.Location
-		expected TimeMilli
+		expected xtime.TimeMilli
 	}{
 		{
 			name:     "UTC to UTC",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			time:     xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			location: time.UTC,
-			expected: DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			expected: xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 		},
 		{
 			name:     "UTC to CET",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			time:     xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			location: time.FixedZone("CET", 2*60*60),
-			expected: DateMilli(2016, time.July, 10, 23, 12, 0, 499, time.FixedZone("CET", 2*60*60)),
+			expected: xtime.DateMilli(2016, time.July, 10, 23, 12, 0, 499, time.FixedZone("CET", 2*60*60)),
 		},
 	}
 
@@ -261,18 +261,18 @@ func TestTimeMilli_Local(t *testing.T) {
 	_, localOffset := time.Now().Local().Zone()
 	testCases := []struct {
 		name     string
-		time     TimeMilli
-		expected TimeMilli
+		time     xtime.TimeMilli
+		expected xtime.TimeMilli
 	}{
 		{
 			name:     "from UTC",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
-			expected: DateMilli(2016, time.July, 10, 21, 12, localOffset, 499, time.FixedZone("local", localOffset)),
+			time:     xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			expected: xtime.DateMilli(2016, time.July, 10, 21, 12, localOffset, 499, time.FixedZone("local", localOffset)),
 		},
 		{
 			name:     "from Local",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.Local),
-			expected: DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.Local),
+			time:     xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.Local),
+			expected: xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.Local),
 		},
 	}
 
@@ -289,25 +289,25 @@ func TestTimeMilli_Local(t *testing.T) {
 func TestTimeMilli_MarshalJSON(t *testing.T) {
 	testCases := []struct {
 		name          string
-		time          TimeMilli
+		time          xtime.TimeMilli
 		expectedBytes []byte
 		expectedErr   error
 	}{
 		{
 			name:          "invalid year",
-			time:          DateMilli(10001, time.July, 10, 21, 12, 0, 499, time.UTC),
+			time:          xtime.DateMilli(10001, time.July, 10, 21, 12, 0, 499, time.UTC),
 			expectedBytes: nil,
 			expectedErr:   errors.New("TimeMilli.MarshalJSON: year outside of range [0,9999]"),
 		},
 		{
 			name:          "UTC - with msec",
-			time:          DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			time:          xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			expectedBytes: []byte(`"2016-07-10T21:12:00.499Z"`),
 			expectedErr:   nil,
 		},
 		{
 			name:          "zone info - no msec",
-			time:          DateMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
+			time:          xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
 			expectedBytes: []byte(`"2016-07-10T21:12:00+02:00"`),
 			expectedErr:   nil,
 		},
@@ -332,25 +332,25 @@ func TestTimeMilli_MarshalJSON(t *testing.T) {
 func TestTimeMilli_MarshalText(t *testing.T) {
 	testCases := []struct {
 		name          string
-		time          TimeMilli
+		time          xtime.TimeMilli
 		expectedBytes []byte
 		expectedErr   error
 	}{
 		{
 			name:          "invalid year",
-			time:          DateMilli(10001, time.July, 10, 21, 12, 0, 499, time.UTC),
+			time:          xtime.DateMilli(10001, time.July, 10, 21, 12, 0, 499, time.UTC),
 			expectedBytes: nil,
 			expectedErr:   errors.New("TimeMilli.MarshalText: year outside of range [0,9999]"),
 		},
 		{
 			name:          "UTC - with msec",
-			time:          DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			time:          xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			expectedBytes: []byte(`2016-07-10T21:12:00.499Z`),
 			expectedErr:   nil,
 		},
 		{
 			name:          "zone info - no msec",
-			time:          DateMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
+			time:          xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
 			expectedBytes: []byte(`2016-07-10T21:12:00+02:00`),
 			expectedErr:   nil,
 		},
@@ -375,17 +375,17 @@ func TestTimeMilli_MarshalText(t *testing.T) {
 func TestTimeMilli_Millisecond(t *testing.T) {
 	testCases := []struct {
 		name     string
-		time     TimeMilli
+		time     xtime.TimeMilli
 		expected int
 	}{
 		{
 			name:     "no msec",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 0, time.UTC),
+			time:     xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 0, time.UTC),
 			expected: 0,
 		},
 		{
 			name:     "with msec",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			time:     xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			expected: 499,
 		},
 	}
@@ -403,21 +403,21 @@ func TestTimeMilli_Millisecond(t *testing.T) {
 func TestTimeMilli_Round(t *testing.T) {
 	testCases := []struct {
 		name     string
-		time     TimeMilli
+		time     xtime.TimeMilli
 		duration time.Duration
-		expected TimeMilli
+		expected xtime.TimeMilli
 	}{
 		{
 			name:     "nearest second",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 1, 499, time.UTC),
+			time:     xtime.DateMilli(2016, time.July, 10, 21, 12, 1, 499, time.UTC),
 			duration: 2 * time.Second,
-			expected: DateMilli(2016, time.July, 10, 21, 12, 2, 0, time.UTC),
+			expected: xtime.DateMilli(2016, time.July, 10, 21, 12, 2, 0, time.UTC),
 		},
 		{
 			name:     "nearest hour",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			time:     xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			duration: time.Hour,
-			expected: DateMilli(2016, time.July, 10, 21, 0, 0, 0, time.UTC),
+			expected: xtime.DateMilli(2016, time.July, 10, 21, 0, 0, 0, time.UTC),
 		},
 	}
 
@@ -432,7 +432,7 @@ func TestTimeMilli_Round(t *testing.T) {
 }
 
 func TestTimeMilli_T(t *testing.T) {
-	x := DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC)
+	x := xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC)
 	expected := time.Date(2016, time.July, 10, 21, 12, 0, 499000000, time.UTC)
 	got := x.T()
 
@@ -444,21 +444,21 @@ func TestTimeMilli_T(t *testing.T) {
 func TestTimeMilli_Truncate(t *testing.T) {
 	testCases := []struct {
 		name     string
-		time     TimeMilli
+		time     xtime.TimeMilli
 		duration time.Duration
-		expected TimeMilli
+		expected xtime.TimeMilli
 	}{
 		{
 			name:     "rounding down to a multiple of 2 seconds",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 1, 499, time.UTC),
+			time:     xtime.DateMilli(2016, time.July, 10, 21, 12, 1, 499, time.UTC),
 			duration: 2 * time.Second,
-			expected: DateMilli(2016, time.July, 10, 21, 12, 0, 0, time.UTC),
+			expected: xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 0, time.UTC),
 		},
 		{
 			name:     "rounding down to nearest hour",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			time:     xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			duration: time.Hour,
-			expected: DateMilli(2016, time.July, 10, 21, 0, 0, 0, time.UTC),
+			expected: xtime.DateMilli(2016, time.July, 10, 21, 0, 0, 0, time.UTC),
 		},
 	}
 
@@ -476,18 +476,18 @@ func TestTimeMilli_UTC(t *testing.T) {
 	_, localOffset := time.Now().Local().Zone()
 	testCases := []struct {
 		name     string
-		time     TimeMilli
-		expected TimeMilli
+		time     xtime.TimeMilli
+		expected xtime.TimeMilli
 	}{
 		{
 			name:     "from UTC",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
-			expected: DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			time:     xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			expected: xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 		},
 		{
 			name:     "from Local",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.FixedZone("local", localOffset)),
-			expected: DateMilli(2016, time.July, 10, 21, 12, -localOffset, 499, time.UTC),
+			time:     xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.FixedZone("local", localOffset)),
+			expected: xtime.DateMilli(2016, time.July, 10, 21, 12, -localOffset, 499, time.UTC),
 		},
 	}
 
@@ -504,17 +504,17 @@ func TestTimeMilli_UTC(t *testing.T) {
 func TestTimeMilli_UnixMilli(t *testing.T) {
 	testCases := []struct {
 		name     string
-		time     TimeMilli
+		time     xtime.TimeMilli
 		expected int64
 	}{
 		{
 			name:     "no msec",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 0, time.UTC),
+			time:     xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 0, time.UTC),
 			expected: 1468185120000,
 		},
 		{
 			name:     "with msec",
-			time:     DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			time:     xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			expected: 1468185120499,
 		},
 	}
@@ -533,40 +533,40 @@ func TestTimeMilli_UnmarshalJSON(t *testing.T) {
 	testCases := []struct {
 		name         string
 		data         []byte
-		expectedTime TimeMilli
+		expectedTime xtime.TimeMilli
 		expectedErr  error
 	}{
 		{
 			name:         "double-quoted string timestamp",
 			data:         []byte(`"1468185120499"`),
-			expectedTime: DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			expectedTime: xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			expectedErr:  nil,
 		},
 		{
 			name:         "number timestamp",
 			data:         []byte(`1468185120499`),
-			expectedTime: DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			expectedTime: xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			expectedErr:  nil,
 		},
 		{
 			name:         "RFC3339 string",
 			data:         []byte(`"2016-07-10T21:12:00+02:00"`),
-			expectedTime: DateMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
+			expectedTime: xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
 		},
 		{
 			name:         "RFC3339Milli string",
 			data:         []byte(`"2016-07-10T21:12:00.499+02:00"`),
-			expectedTime: DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.FixedZone("CET", 2*60*60)),
+			expectedTime: xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.FixedZone("CET", 2*60*60)),
 		},
 		{
 			name:         "RFC3339Nano string",
 			data:         []byte(`"2016-07-10T21:12:00.499+02:00"`),
-			expectedTime: ToMilli(time.Date(2016, time.July, 10, 21, 12, 0, 499000000, time.FixedZone("CET", 2*60*60))),
+			expectedTime: xtime.ToMilli(time.Date(2016, time.July, 10, 21, 12, 0, 499000000, time.FixedZone("CET", 2*60*60))),
 		},
 	}
 
 	for _, tc := range testCases {
-		var gotTime TimeMilli
+		var gotTime xtime.TimeMilli
 		gotErr := gotTime.UnmarshalJSON(tc.data)
 
 		if !tc.expectedTime.Equal(gotTime.T()) {
@@ -584,34 +584,34 @@ func TestTimeMilli_UnmarshalText(t *testing.T) {
 	testCases := []struct {
 		name         string
 		data         []byte
-		expectedTime TimeMilli
+		expectedTime xtime.TimeMilli
 		expectedErr  error
 	}{
 		{
 			name:         "timestamp",
 			data:         []byte(`1468185120499`),
-			expectedTime: DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			expectedTime: xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			expectedErr:  nil,
 		},
 		{
 			name:         "RFC3339",
 			data:         []byte(`2016-07-10T21:12:00+02:00`),
-			expectedTime: DateMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
+			expectedTime: xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
 		},
 		{
 			name:         "RFC3339Milli",
 			data:         []byte(`2016-07-10T21:12:00.499+02:00`),
-			expectedTime: DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.FixedZone("CET", 2*60*60)),
+			expectedTime: xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 499, time.FixedZone("CET", 2*60*60)),
 		},
 		{
 			name:         "RFC3339Nano",
 			data:         []byte(`2016-07-10T21:12:00.499+02:00`),
-			expectedTime: ToMilli(time.Date(2016, time.July, 10, 21, 12, 0, 499000000, time.FixedZone("CET", 2*60*60))),
+			expectedTime: xtime.ToMilli(time.Date(2016, time.July, 10, 21, 12, 0, 499000000, time.FixedZone("CET", 2*60*60))),
 		},
 	}
 
 	for _, tc := range testCases {
-		var gotTime TimeMilli
+		var gotTime xtime.TimeMilli
 		gotErr := gotTime.UnmarshalText(tc.data)
 
 		if !tc.expectedTime.Equal(gotTime.T()) {

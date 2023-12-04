@@ -4,9 +4,8 @@ linters-settings:
   errcheck:
     check-blank: true
     check-type-assertions: true
-  funlen:
-    lines: 100
-    statements: 50
+  exhaustive:
+    default-signifies-exhaustive: true
   goconst:
     min-len: 2
     min-occurrences: 2
@@ -21,6 +20,9 @@ linters-settings:
     min-complexity: 15
   godot:
     capital: true
+  gofumpt:
+    module-path: github.com/jlourenc/xgo
+    extra-rules: true
   goheader:
     template: |-
       Copyright {{ YEAR }} Jérémy Lourenço. All rights reserved.
@@ -41,14 +43,15 @@ linters-settings:
       modules: []
       domains: []
   gosimple:
-    checks: [all]
+    checks: ['all']
     settings:
       shadow:
         strict: true
+  gosmopolitan:
+    allow-time-local: true
   govet:
     check-shadowing: true
-  lll:
-    line-length: 140
+    enable-all: true
   misspell:
     locale: US
   nolintlint:
@@ -56,10 +59,31 @@ linters-settings:
     require-specific: true
   prealloc:
     for-loops: true
+  revive:
+    enable-all-rules: true
+    rules:
+      - name: add-constant
+        disabled: true
+      - name: cognitive-complexity
+        disabled: true
+      - name: cyclomatic
+        disabled: true
+      - name: deep-exit
+        disabled: true
+      - name: flag-parameter
+        disabled: true
+      - name: function-length
+        arguments: [50,100]
+      - name: line-length-limit
+        arguments: [150]
+      - name: unhandled-error
+        arguments:
+          - 'fmt\.F?(P|p)rint(f|ln)?'
+          - 'strings\.Builder\.WriteString'
   staticcheck:
-    checks: [all]
+    checks: ['all']
   stylecheck:
-    checks: [all]
+    checks: ['all']
     http-status-code-whitelist: []
   tenv:
     all: true
@@ -73,8 +97,8 @@ linters-settings:
     time-month: true
     tls-signature-scheme: true
 linters:
-  disable-all: true
   enable:
+    - asasalint
     - asciicheck
     - bidichk
     - bodyclose
@@ -83,30 +107,33 @@ linters:
     - dogsled
     - dupl
     - durationcheck
-    - errcheck
     - execinquery
     - exhaustive
     - exportloopref
     - forbidigo
-    - funlen
+    - gocheckcompilerdirectives
+    - gochecksumtype
     - goconst
     - gocritic
     - gocyclo
     - godot
     - godox
+    - gofumpt
     - goheader
     - goimports
     - gomnd
+    - gomoddirectives
     - gomodguard
     - goprintffuncname
     - gosec
-    - gosimple
-    - govet
-    - importas
-    - ineffassign
-    - lll
-    - maintidx
+    - gosmopolitan
+    - inamedparam
+    - interfacebloat
+    - loggercheck
+    - makezero
+    - mirror
     - misspell
+    - musttag
     - nakedret
     - nestif
     - nilerr
@@ -114,13 +141,17 @@ linters:
     - noctx
     - nolintlint
     - nosprintfhostport
+    - perfsprint
     - prealloc
     - predeclared
+    - protogetter
     - reassign
+    - revive
     - rowserrcheck
+    - sloglint
     - sqlclosecheck
-    - staticcheck
     - stylecheck
+    - tagalign
     - tagliatelle
     - tenv
     - testpackage
@@ -129,17 +160,17 @@ linters:
     - typecheck
     - unconvert
     - unparam
-    - unused
     - usestdlibvars
     - wastedassign
     - whitespace
+    - zerologlint
 issues:
   exclude-rules:
     - path: _test\.go
       linters:
         - dupl
         - errcheck
-        - funlen
         - goconst
         - gomnd
+        - govet
         - lll

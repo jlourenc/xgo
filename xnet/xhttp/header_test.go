@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	. "github.com/jlourenc/xgo/xnet/xhttp"
+	"github.com/jlourenc/xgo/xnet/xhttp"
 )
 
 func TestHeaderExist(t *testing.T) {
@@ -47,7 +47,7 @@ func TestHeaderExist(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := HeaderExist(tc.headers, tc.key)
+			got := xhttp.HeaderExist(tc.headers, tc.key)
 
 			if tc.expected != got {
 				t.Errorf("expected %v; got %v", tc.expected, got)
@@ -118,7 +118,7 @@ func TestHeaderKeyValues(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := HeaderKeyValues(tc.headers, tc.key)
+			got := xhttp.HeaderKeyValues(tc.headers, tc.key)
 
 			if len(tc.expected) != len(got) {
 				t.Fatalf("expected %v; got %v", tc.expected, got)
@@ -185,7 +185,7 @@ func TestHeaderValues(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := HeaderValues(tc.headers, tc.key)
+			got := xhttp.HeaderValues(tc.headers, tc.key)
 
 			if len(tc.expected) != len(got) {
 				t.Fatalf("expected %v; got %v", tc.expected, got)
@@ -216,7 +216,7 @@ func TestParseHeaderDate(t *testing.T) {
 		{
 			name: "empty",
 			headers: http.Header{
-				HeaderDate: {""},
+				xhttp.HeaderDate: {""},
 			},
 			expectedTime: time.Time{},
 			expectedErr:  true,
@@ -224,7 +224,7 @@ func TestParseHeaderDate(t *testing.T) {
 		{
 			name: "invalid date",
 			headers: http.Header{
-				HeaderDate: {"invalid"},
+				xhttp.HeaderDate: {"invalid"},
 			},
 			expectedTime: time.Time{},
 			expectedErr:  true,
@@ -232,7 +232,7 @@ func TestParseHeaderDate(t *testing.T) {
 		{
 			name: "invalid format",
 			headers: http.Header{
-				HeaderDate: {"1994-11-06T08:49:37Z00:00"},
+				xhttp.HeaderDate: {"1994-11-06T08:49:37Z00:00"},
 			},
 			expectedTime: time.Time{},
 			expectedErr:  true,
@@ -240,7 +240,7 @@ func TestParseHeaderDate(t *testing.T) {
 		{
 			name: "RFC1123 format",
 			headers: http.Header{
-				HeaderDate: {"Sun, 10 Jul 2016 21:12:00.499 GMT"},
+				xhttp.HeaderDate: {"Sun, 10 Jul 2016 21:12:00.499 GMT"},
 			},
 			expectedTime: time.Date(2016, time.July, 10, 21, 12, 0, 499000000, time.UTC),
 			expectedErr:  false,
@@ -248,7 +248,7 @@ func TestParseHeaderDate(t *testing.T) {
 		{
 			name: "RFC850 format",
 			headers: http.Header{
-				HeaderDate: {"Sunday, 10-Jul-16 21:12:00 GMT"},
+				xhttp.HeaderDate: {"Sunday, 10-Jul-16 21:12:00 GMT"},
 			},
 			expectedTime: time.Date(2016, time.July, 10, 21, 12, 0, 0, time.UTC),
 			expectedErr:  false,
@@ -256,7 +256,7 @@ func TestParseHeaderDate(t *testing.T) {
 		{
 			name: "ANSIC format",
 			headers: http.Header{
-				HeaderDate: {"Sun Jul 10 21:12:00 2016"},
+				xhttp.HeaderDate: {"Sun Jul 10 21:12:00 2016"},
 			},
 			expectedTime: time.Date(2016, time.July, 10, 21, 12, 0, 0, time.UTC),
 			expectedErr:  false,
@@ -265,7 +265,7 @@ func TestParseHeaderDate(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			d, err := ParseHeaderDate(tc.headers)
+			d, err := xhttp.ParseHeaderDate(tc.headers)
 
 			if tc.expectedErr && err == nil {
 				t.Error("error expected, got nil")
@@ -357,7 +357,7 @@ func TestReplaceHeader(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			ReplaceHeader(tc.headers, tc.prefix, tc.key, tc.values...)
+			xhttp.ReplaceHeader(tc.headers, tc.prefix, tc.key, tc.values...)
 
 			if len(tc.expected) != len(tc.headers) {
 				t.Fatalf("expected %v; got %v", tc.expected, tc.headers)

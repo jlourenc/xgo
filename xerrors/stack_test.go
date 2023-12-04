@@ -10,7 +10,7 @@ import (
 	"regexp"
 	"testing"
 
-	. "github.com/jlourenc/xgo/xerrors"
+	"github.com/jlourenc/xgo/xerrors"
 )
 
 type (
@@ -18,9 +18,9 @@ type (
 	unstackError struct{}
 )
 
-func (unstackError) Error() string        { return "unstack error" }
-func (stackError) Error() string          { return "stack error" }
-func (stackError) StackTrace() StackTrace { return []Frame{0, 1, 2, 3} }
+func (unstackError) Error() string                { return "unstack error" }
+func (stackError) Error() string                  { return "stack error" }
+func (stackError) StackTrace() xerrors.StackTrace { return []xerrors.Frame{0, 1, 2, 3} }
 
 func TestWithStack(t *testing.T) {
 	testCases := []struct {
@@ -62,7 +62,7 @@ func TestWithStack(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := WithStack(tc.err)
+			got := xerrors.WithStack(tc.err)
 
 			tc.assert(t, got)
 		})
@@ -137,10 +137,10 @@ func TestWithStack_Format(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			EnableStackTrace(tc.enableStackTrace)
-			defer EnableStackTrace(false)
+			xerrors.EnableStackTrace(tc.enableStackTrace)
+			defer xerrors.EnableStackTrace(false)
 
-			got := fmt.Sprintf(tc.format, WithStack(tc.err))
+			got := fmt.Sprintf(tc.format, xerrors.WithStack(tc.err))
 
 			re, err := regexp.Compile(tc.expected)
 			if err != nil {
@@ -161,7 +161,7 @@ func TestWithStack_Unwrap(t *testing.T) {
 	}{
 		{
 			name:     "unwrap",
-			err:      WithStack(&unstackError{}),
+			err:      xerrors.WithStack(&unstackError{}),
 			expected: &unstackError{},
 		},
 	}

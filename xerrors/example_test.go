@@ -19,7 +19,7 @@ func ExampleAppend() {
 		if b < 0 {
 			errs = xerrors.Append(errs, xerrors.New("right operand is negative"))
 		}
-		return
+		return errs
 	}
 
 	var errs error

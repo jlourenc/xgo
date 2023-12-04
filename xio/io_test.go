@@ -9,7 +9,7 @@ import (
 	"io"
 	"testing"
 
-	. "github.com/jlourenc/xgo/xio"
+	"github.com/jlourenc/xgo/xio"
 )
 
 func TestDrainClose(t *testing.T) {
@@ -47,7 +47,7 @@ func TestDrainClose(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := DrainClose(tc.rc)
+			got := xio.DrainClose(tc.rc)
 
 			if tc.expected != got {
 				t.Errorf("expected %s; got %s", tc.expected, got)
@@ -89,7 +89,7 @@ func TestDuplicateReader(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			r1, r2, err := DuplicateReader(tc.r)
+			r1, r2, err := xio.DuplicateReader(tc.r)
 
 			if r1 != nil {
 				b1, _ := io.ReadAll(r1)
@@ -160,7 +160,7 @@ func TestDuplicateReadCloser(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			rc1, rc2, err := DuplicateReadCloser(tc.rc)
+			rc1, rc2, err := xio.DuplicateReadCloser(tc.rc)
 
 			if rc1 != nil {
 				b1, _ := io.ReadAll(rc1)
@@ -193,7 +193,7 @@ func TestDuplicateReadCloser(t *testing.T) {
 
 type errClose struct{}
 
-func (errClose) Read(p []byte) (n int, err error) {
+func (errClose) Read([]byte) (n int, err error) {
 	return 0, io.EOF
 }
 
@@ -203,7 +203,7 @@ func (errClose) Close() error {
 
 type errRead struct{}
 
-func (errRead) Read(p []byte) (n int, err error) {
+func (errRead) Read([]byte) (n int, err error) {
 	return 0, io.ErrNoProgress
 }
 
@@ -213,7 +213,7 @@ func (errRead) Close() error {
 
 type errReadClose struct{}
 
-func (errReadClose) Read(p []byte) (n int, err error) {
+func (errReadClose) Read([]byte) (n int, err error) {
 	return 0, io.ErrNoProgress
 }
 

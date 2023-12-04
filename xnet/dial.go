@@ -82,7 +82,7 @@ func (d *Dialer) DialContext(ctx context.Context, network, address string) (net.
 type (
 	// DialOption configures how connections are made.
 	DialOption interface {
-		apply(*Dialer)
+		apply(d *Dialer)
 	}
 
 	funcDialOption struct {
@@ -139,7 +139,7 @@ func DialWriteTimeout(timeout time.Duration) DialOption {
 type (
 	// ListenConfigOption is an option to configure  anet.ListenConfig.
 	ListenConfigOption interface {
-		apply(*net.ListenConfig)
+		apply(lc *net.ListenConfig)
 	}
 
 	funcListenConfigOption struct {

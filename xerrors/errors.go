@@ -29,7 +29,7 @@ func New(message string) error {
 // New also records a stack trace at the point it is called if enabled.
 //
 // It is the equivalent of fmt.Errorf.
-func Newf(format string, args ...interface{}) error {
+func Newf(format string, args ...any) error {
 	return &withStack{
 		error: fmt.Errorf(format, args...),
 		stack: callers(),

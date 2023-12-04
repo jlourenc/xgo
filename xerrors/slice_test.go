@@ -7,12 +7,13 @@ package xerrors_test
 import (
 	"fmt"
 	"regexp"
+	"strings"
 	"testing"
 
-	. "github.com/jlourenc/xgo/xerrors"
+	"github.com/jlourenc/xgo/xerrors"
 )
 
-var isErr = New("is error")
+var isErr = xerrors.New("is error")
 
 func TestAppend(t *testing.T) {
 	testCases := []struct {
@@ -65,21 +66,21 @@ func TestAppend(t *testing.T) {
 		},
 		{
 			name:     "append errors to a grouped error",
-			err:      Append(&stackError{}),
+			err:      xerrors.Append(&stackError{}),
 			errs:     []error{&stackError{}, &unstackError{}},
 			expected: "3 errors occurred:\n\t* stack error\n\t* stack error\n\t* unstack error\n",
 		},
 		{
 			name:     "append grouped errors to a group error",
-			err:      Append(&stackError{}),
-			errs:     []error{Append(&stackError{}), Append(&unstackError{})},
+			err:      xerrors.Append(&stackError{}),
+			errs:     []error{xerrors.Append(&stackError{}), xerrors.Append(&unstackError{})},
 			expected: "3 errors occurred:\n\t* stack error\n\t* 1 error occurred:\n\t\t* stack error\n\t* 1 error occurred:\n\t\t* unstack error\n",
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := Append(tc.err, tc.errs...)
+			got := xerrors.Append(tc.err, tc.errs...)
 
 			if tc.expected == "" && got != nil {
 				t.Errorf("expected no error, got %s", got)
@@ -102,29 +103,35 @@ func TestWithSlice_As(t *testing.T) {
 	}{
 		{
 			name:     "error type is part of a simple grouped error",
-			err:      Append(&unstackError{}),
+			err:      xerrors.Append(&unstackError{}),
 			expected: true,
 		},
 		{
 			name:     "error type is not part of a simple grouped error",
-			err:      Append(&stackError{}),
+			err:      xerrors.Append(&stackError{}),
 			expected: false,
 		},
 		{
-			name:     "error type is part of a multiple grouped error",
-			err:      Append(Append(New("error message 0"), Wrap(&unstackError{}, "wrapped")), New("error message 1")),
+			name: "error type is part of a multiple grouped error",
+			err: xerrors.Append(
+				xerrors.Append(xerrors.New("error message 0"), xerrors.Wrap(&unstackError{}, "wrapped")),
+				xerrors.New("error message 1"),
+			),
 			expected: true,
 		},
 		{
-			name:     "error type is not part of a multiple grouped error",
-			err:      Append(Append(New("error message 0"), Wrap(&stackError{}, "wrapped")), New("error message 1")),
+			name: "error type is not part of a multiple grouped error",
+			err: xerrors.Append(
+				xerrors.Append(xerrors.New("error message 0"), xerrors.Wrap(&stackError{}, "wrapped")),
+				xerrors.New("error message 1"),
+			),
 			expected: false,
 		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			var uerr *unstackError
-			got := As(tc.err, &uerr)
+			got := xerrors.As(tc.err, &uerr)
 
 			if tc.expected != got {
 				t.Errorf("expected %t, got %t", tc.expected, got)
@@ -140,9 +147,18 @@ func TestWithSlice_Error(t *testing.T) {
 		expected string
 	}{
 		{
-			name:     "error",
-			err:      Append(New("error message 0"), Wrap(Append(New("error message 1"), New("error message 2")), "wrapped"), Append(New("error message 3"))),
-			expected: "3 errors occurred:\n\t* error message 0\n\t* wrapped: 2 errors occurred:\n\t\t* error message 1\n\t\t* error message 2\n\t* 1 error occurred:\n\t\t* error message 3\n",
+			name: "error",
+			err: xerrors.Append(
+				xerrors.New("error message 0"),
+				xerrors.Wrap(xerrors.Append(xerrors.New("error message 1"), xerrors.New("error message 2")), "wrapped"),
+				xerrors.Append(xerrors.New("error message 3")),
+			),
+			expected: strings.Join([]string{
+				"3 errors occurred:\n\t",
+				"* error message 0\n\t",
+				"* wrapped: 2 errors occurred:\n\t\t* error message 1\n\t\t* error message 2\n\t",
+				"* 1 error occurred:\n\t\t* error message 3\n",
+			}, ""),
 		},
 	}
 	for _, tc := range testCases {
@@ -157,7 +173,7 @@ func TestWithSlice_Error(t *testing.T) {
 }
 
 func TestWithSlice_Format(t *testing.T) {
-	EnableStackTrace(false)
+	xerrors.EnableStackTrace(false)
 
 	testCases := []struct {
 		name     string
@@ -166,34 +182,74 @@ func TestWithSlice_Format(t *testing.T) {
 		expected string
 	}{
 		{
-			name:     "default",
-			err:      Append(New("error message 0"), Wrap(Append(New("error message 1"), New("error message 2")), "wrapped"), Append(New("error message 3"))),
-			format:   "%v",
-			expected: `3 errors occurred:\n\t\* error message 0\n\t\* wrapped: 2 errors occurred:\n\t\t\* error message 1\n\t\t\* error message 2\n\t\* 1 error occurred:\n\t\t\* error message 3\n`,
+			name: "default",
+			err: xerrors.Append(
+				xerrors.New("error message 0"),
+				xerrors.Wrap(xerrors.Append(xerrors.New("error message 1"), xerrors.New("error message 2")), "wrapped"),
+				xerrors.Append(xerrors.New("error message 3")),
+			),
+			format: "%v",
+			expected: strings.Join([]string{
+				`3 errors occurred:\n\t`,
+				`\* error message 0\n\t`,
+				`\* wrapped: 2 errors occurred:\n\t\t\* error message 1\n\t\t\* error message 2\n\t`,
+				`\* 1 error occurred:\n\t\t\* error message 3\n`,
+			}, ""),
 		},
 		{
-			name:     "default plus extra with stack trace disabled",
-			err:      Append(New("error message 0"), Wrap(Append(New("error message 1"), New("error message 2")), "wrapped"), Append(New("error message 3"))),
-			format:   "%+v",
-			expected: `3 errors occurred:\n\t\* error message 0\n\t\* wrapped: 2 errors occurred:\n\t\t\* error message 1\n\t\t\* error message 2\n\t\* 1 error occurred:\n\t\t\* error message 3\n`,
+			name: "default plus extra with stack trace disabled",
+			err: xerrors.Append(
+				xerrors.New("error message 0"),
+				xerrors.Wrap(xerrors.Append(xerrors.New("error message 1"), xerrors.New("error message 2")), "wrapped"),
+				xerrors.Append(xerrors.New("error message 3")),
+			),
+			format: "%+v",
+			expected: strings.Join([]string{
+				`3 errors occurred:\n\t`,
+				`\* error message 0\n\t`,
+				`\* wrapped: 2 errors occurred:\n\t\t\* error message 1\n\t\t\* error message 2\n\t`,
+				`\* 1 error occurred:\n\t\t\* error message 3\n`,
+			}, ""),
 		},
 		{
-			name:     "Go-syntax representation of the value with stack trace disabled",
-			err:      Append(New("error message 0"), Wrap(Append(New("error message 1"), New("error message 2")), "wrapped"), Append(New("error message 3"))),
+			name: "Go-syntax representation of the value with stack trace disabled",
+			err: xerrors.Append(
+				xerrors.New("error message 0"),
+				xerrors.Wrap(xerrors.Append(xerrors.New("error message 1"), xerrors.New("error message 2")), "wrapped"),
+				xerrors.Append(xerrors.New("error message 3")),
+			),
 			format:   "%#v",
 			expected: `\*xerrors\.withSlice\{errs:\(\[\]error\)\(0x[a-f0-9]+\)\}`,
 		},
 		{
-			name:     "string",
-			err:      Append(New("error message 0"), Wrap(Append(New("error message 1"), New("error message 2")), "wrapped"), Append(New("error message 3"))),
-			format:   "%s",
-			expected: `3 errors occurred:\n\t\* error message 0\n\t\* wrapped: 2 errors occurred:\n\t\t\* error message 1\n\t\t\* error message 2\n\t\* 1 error occurred:\n\t\t\* error message 3\n`,
+			name: "string",
+			err: xerrors.Append(
+				xerrors.New("error message 0"),
+				xerrors.Wrap(xerrors.Append(xerrors.New("error message 1"), xerrors.New("error message 2")), "wrapped"),
+				xerrors.Append(xerrors.New("error message 3")),
+			),
+			format: "%s",
+			expected: strings.Join([]string{
+				`3 errors occurred:\n\t`,
+				`\* error message 0\n\t`,
+				`\* wrapped: 2 errors occurred:\n\t\t\* error message 1\n\t\t\* error message 2\n\t`,
+				`\* 1 error occurred:\n\t\t\* error message 3\n`,
+			}, ""),
 		},
 		{
-			name:     "double-quote string",
-			err:      Append(New("error message 0"), Wrap(Append(New("error message 1"), New("error message 2")), "wrapped"), Append(New("error message 3"))),
-			format:   "%q",
-			expected: `\"3 errors occurred:\\n\\t\* error message 0\\n\\t\* wrapped: 2 errors occurred:\\n\\t\\t\* error message 1\\n\\t\\t\* error message 2\\n\\t\* 1 error occurred:\\n\\t\\t\* error message 3\\n\"`,
+			name: "double-quote string",
+			err: xerrors.Append(
+				xerrors.New("error message 0"),
+				xerrors.Wrap(xerrors.Append(xerrors.New("error message 1"), xerrors.New("error message 2")), "wrapped"),
+				xerrors.Append(xerrors.New("error message 3")),
+			),
+			format: "%q",
+			expected: strings.Join([]string{
+				`\"3 errors occurred:\\n\\t`,
+				`\* error message 0\\n\\t`,
+				`\* wrapped: 2 errors occurred:\\n\\t\\t\* error message 1\\n\\t\\t\* error message 2\\n\\t`,
+				`\* 1 error occurred:\\n\\t\\t\* error message 3\\n\"`,
+			}, ""),
 		},
 	}
 	for _, tc := range testCases {
@@ -219,28 +275,31 @@ func TestWithSlice_Is(t *testing.T) {
 	}{
 		{
 			name:     "error type part of a simple grouped error",
-			err:      Append(New("error message 0"), Wrap(isErr, "wrapped"), New("error message 1")),
+			err:      xerrors.Append(xerrors.New("error message 0"), xerrors.Wrap(isErr, "wrapped"), xerrors.New("error message 1")),
 			expected: true,
 		},
 		{
 			name:     "error type not part of a simple grouped error",
-			err:      Append(New("error message 0"), Wrap(&stackError{}, "wrapped"), New("error message 1")),
+			err:      xerrors.Append(xerrors.New("error message 0"), xerrors.Wrap(&stackError{}, "wrapped"), xerrors.New("error message 1")),
 			expected: false,
 		},
 		{
 			name:     "error type part of a multiple grouped error",
-			err:      Append(Append(New("error message 0"), Wrap(isErr, "wrapped")), New("error message 1")),
+			err:      xerrors.Append(xerrors.Append(xerrors.New("error message 0"), xerrors.Wrap(isErr, "wrapped")), xerrors.New("error message 1")),
 			expected: true,
 		},
 		{
-			name:     "error type not part of a multiple grouped error",
-			err:      Append(Append(New("error message 0"), Wrap(&stackError{}, "wrapped")), New("error message 1")),
+			name: "error type not part of a multiple grouped error",
+			err: xerrors.Append(
+				xerrors.Append(xerrors.New("error message 0"), xerrors.Wrap(&stackError{}, "wrapped")),
+				xerrors.New("error message 1"),
+			),
 			expected: false,
 		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := Is(tc.err, isErr)
+			got := xerrors.Is(tc.err, isErr)
 
 			if tc.expected != got {
 				t.Errorf("expected %t, got %t", tc.expected, got)
@@ -276,10 +335,10 @@ func TestWithSlice_StackTrace(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			EnableStackTrace(tc.enableStackTrace)
-			defer EnableStackTrace(false)
+			xerrors.EnableStackTrace(tc.enableStackTrace)
+			defer xerrors.EnableStackTrace(false)
 
-			got := Append(tc.err).(interface{ StackTrace() StackTrace }).StackTrace()
+			got := xerrors.Append(tc.err).(interface{ StackTrace() xerrors.StackTrace }).StackTrace()
 
 			if len(got) != tc.expectedSize {
 				t.Errorf("expected stack trace of size %d, got %v", tc.expectedSize, got)
@@ -296,7 +355,7 @@ func TestChain_Error(t *testing.T) {
 	}{
 		{
 			name:     "error 0",
-			err:      Unwrap(Append(New("error message 0"), New("error message 1"), New("error message 3"))),
+			err:      xerrors.Unwrap(xerrors.Append(xerrors.New("error message 0"), xerrors.New("error message 1"), xerrors.New("error message 3"))),
 			expected: "error message 0",
 		},
 	}
@@ -320,27 +379,27 @@ func TestChain_StackTrace(t *testing.T) {
 	}{
 		{
 			name:         "stack error",
-			err:          Unwrap(Append(&stackError{}, New("error message 0"))),
+			err:          xerrors.Unwrap(xerrors.Append(&stackError{}, xerrors.New("error message 0"))),
 			expectedSize: 4,
 		},
 		{
 			name:         "unstack error with stack trace disabled",
-			err:          Unwrap(Append(&unstackError{}, New("error message 0"))),
+			err:          xerrors.Unwrap(xerrors.Append(&unstackError{}, xerrors.New("error message 0"))),
 			expectedSize: 0,
 		},
 		{
 			name:         "unwrapped error with no stack trace",
-			err:          Unwrap(Unwrap(Append(&unstackError{}, New("error message 0")))),
+			err:          xerrors.Unwrap(xerrors.Unwrap(xerrors.Append(&unstackError{}, xerrors.New("error message 0")))),
 			expectedSize: 0,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			EnableStackTrace(tc.enableStackTrace)
-			defer EnableStackTrace(false)
+			xerrors.EnableStackTrace(tc.enableStackTrace)
+			defer xerrors.EnableStackTrace(false)
 
-			got := tc.err.(interface{ StackTrace() StackTrace }).StackTrace()
+			got := tc.err.(interface{ StackTrace() xerrors.StackTrace }).StackTrace()
 
 			if len(got) != tc.expectedSize {
 				t.Errorf("expected stack trace of size %d, got %v", tc.expectedSize, got)
