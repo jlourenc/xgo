@@ -7,7 +7,7 @@ package xsort_test
 import (
 	"testing"
 
-	. "github.com/jlourenc/xgo/xsort"
+	"github.com/jlourenc/xgo/xsort"
 )
 
 func TestExist(t *testing.T) {
@@ -94,7 +94,7 @@ func TestExist(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := Exist(tc.n, tc.cmp)
+			got := xsort.Exist(tc.n, tc.cmp)
 
 			if got != tc.expected {
 				t.Errorf("expected %t; got %t", tc.expected, got)
@@ -132,7 +132,7 @@ func TestExistInts(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := ExistInts(tc.a, tc.x)
+			got := xsort.ExistInts(tc.a, tc.x)
 
 			if got != tc.expected {
 				t.Errorf("expected %t; got %t", tc.expected, got)
@@ -170,7 +170,7 @@ func TestExistFloat64s(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := ExistFloat64s(tc.a, tc.x)
+			got := xsort.ExistFloat64s(tc.a, tc.x)
 
 			if got != tc.expected {
 				t.Errorf("expected %t; got %t", tc.expected, got)
@@ -208,7 +208,7 @@ func TestExistStrings(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := ExistStrings(tc.a, tc.x)
+			got := xsort.ExistStrings(tc.a, tc.x)
 
 			if got != tc.expected {
 				t.Errorf("expected %t; got %t", tc.expected, got)

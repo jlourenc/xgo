@@ -8,16 +8,17 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"strings"
 	"testing"
 
-	. "github.com/jlourenc/xgo/xerrors"
+	"github.com/jlourenc/xgo/xerrors"
 )
 
 func TestAs(t *testing.T) {
 	testCases := []struct {
 		name     string
 		err      error
-		target   interface{}
+		target   any
 		expected bool
 	}{
 		{
@@ -36,7 +37,7 @@ func TestAs(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := As(tc.err, tc.target)
+			got := xerrors.As(tc.err, tc.target)
 
 			if tc.expected != got {
 				t.Errorf("expected %t, got %t", tc.expected, got)
@@ -68,7 +69,7 @@ func TestIs(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := Is(tc.err, tc.target)
+			got := xerrors.Is(tc.err, tc.target)
 
 			if tc.expected != got {
 				t.Errorf("expected %t, got %t", tc.expected, got)
@@ -97,7 +98,7 @@ func TestUnwrap(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := Unwrap(tc.err)
+			got := xerrors.Unwrap(tc.err)
 
 			if tc.expected != got {
 				t.Errorf("expected %v, got %v", tc.expected, got)
@@ -146,7 +147,7 @@ func TestWrap(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := Wrap(tc.err, "wrap")
+			got := xerrors.Wrap(tc.err, "wrap")
 
 			tc.assert(t, got)
 		})
@@ -193,7 +194,7 @@ func TestWrapf(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := Wrapf(tc.err, "%s", "wrap")
+			got := xerrors.Wrapf(tc.err, "%s", "wrap")
 
 			tc.assert(t, got)
 		})
@@ -208,7 +209,7 @@ func TestWithWrap_Error(t *testing.T) {
 	}{
 		{
 			name:     "error",
-			err:      Wrap(&stackError{}, "wrap"),
+			err:      xerrors.Wrap(&stackError{}, "wrap"),
 			expected: "wrap: stack error",
 		},
 	}
@@ -240,7 +241,7 @@ func TestWithWrap_Format(t *testing.T) {
 		},
 		{
 			name:     "default format plus extra with stack trace disabled",
-			err:      Wrap(errors.New("error message"), "wrapped 0"),
+			err:      xerrors.Wrap(errors.New("error message"), "wrapped 0"),
 			format:   "%+v",
 			expected: `wrapped: wrapped 0: error message`,
 		},
@@ -287,15 +288,19 @@ func TestWithWrap_Format(t *testing.T) {
 			err:              errors.New("error message"),
 			enableStackTrace: true,
 			format:           "%t",
-			expected:         `\&\{\%\!t\(string=wrapped: error message\) \%\!t\(\*xerrors\.withStack\{error:\(string\)\(0x[a-f0-9]+\), stack:xerrors\.stack\[([0-9]+[ ]?){3}\]\}\)\}`,
+			expected: strings.Join([]string{
+				`\&\{\%\!t\(string=wrapped: error message\)`,
+				`\%\!t\(\*xerrors\.withStack\{error:\(string\)\(0x[a-f0-9]+\),`,
+				`stack:xerrors\.stack\[([0-9]+[ ]?){3}\]\}\)\}`,
+			}, " "),
 		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			EnableStackTrace(tc.enableStackTrace)
-			defer EnableStackTrace(false)
+			xerrors.EnableStackTrace(tc.enableStackTrace)
+			defer xerrors.EnableStackTrace(false)
 
-			got := fmt.Sprintf(tc.format, Wrap(tc.err, "wrapped"))
+			got := fmt.Sprintf(tc.format, xerrors.Wrap(tc.err, "wrapped"))
 
 			re, err := regexp.Compile(tc.expected)
 			if err != nil {
@@ -335,10 +340,10 @@ func TestWithWrap_StackTrace(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			EnableStackTrace(tc.enableStackTrace)
-			defer EnableStackTrace(false)
+			xerrors.EnableStackTrace(tc.enableStackTrace)
+			defer xerrors.EnableStackTrace(false)
 
-			got := Wrap(tc.err, "wrapped").(interface{ StackTrace() StackTrace }).StackTrace()
+			got := xerrors.Wrap(tc.err, "wrapped").(interface{ StackTrace() xerrors.StackTrace }).StackTrace()
 
 			if len(got) != tc.expectedSize {
 				t.Errorf("expected stack trace of size %d, got %v", tc.expectedSize, got)
@@ -355,7 +360,7 @@ func TestWithWrap_Unwrap(t *testing.T) {
 	}{
 		{
 			name:     "unwrap",
-			err:      Wrap(&stackError{}, ""),
+			err:      xerrors.Wrap(&stackError{}, ""),
 			expected: &stackError{},
 		},
 	}

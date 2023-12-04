@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	. "github.com/jlourenc/xgo/xtime"
+	"github.com/jlourenc/xgo/xtime"
 )
 
 func TestDateStampMilli(t *testing.T) {
@@ -77,7 +77,7 @@ func TestDateStampMilli(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := DateStampMilli(tc.year, tc.month, tc.day, tc.hour, tc.min, tc.sec, tc.msec, tc.loc)
+			got := xtime.DateStampMilli(tc.year, tc.month, tc.day, tc.hour, tc.min, tc.sec, tc.msec, tc.loc)
 			if !tc.expected.Equal(got.T()) {
 				t.Errorf("expected %s; got %s", tc.expected, got)
 			}
@@ -88,7 +88,7 @@ func TestDateStampMilli(t *testing.T) {
 func TestNowStampMilli(t *testing.T) {
 	before := time.Now()
 	time.Sleep(time.Millisecond)
-	got := NowStampMilli()
+	got := xtime.NowStampMilli()
 	time.Sleep(time.Millisecond)
 	after := time.Now()
 
@@ -99,7 +99,7 @@ func TestNowStampMilli(t *testing.T) {
 
 func TestToStampMilli(t *testing.T) {
 	expected := time.Now()
-	got := ToStampMilli(expected)
+	got := xtime.ToStampMilli(expected)
 
 	if !got.Equal(expected) {
 		t.Errorf("expected %s; got %s", expected, got)
@@ -135,7 +135,7 @@ func TestUnixStampMilli(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := UnixStampMilli(tc.sec, tc.msec)
+			got := xtime.UnixStampMilli(tc.sec, tc.msec)
 			if !tc.expected.Equal(got.T()) {
 				t.Errorf("expected %s; got %s", tc.expected, got)
 			}
@@ -146,27 +146,27 @@ func TestUnixStampMilli(t *testing.T) {
 func TestTimestampMilli_Add(t *testing.T) {
 	testCases := []struct {
 		name      string
-		timestamp TimestampMilli
+		timestamp xtime.TimestampMilli
 		duration  time.Duration
-		expected  TimestampMilli
+		expected  xtime.TimestampMilli
 	}{
 		{
 			name:      "zero duration",
-			timestamp: UnixStampMilli(1468181520, 499),
+			timestamp: xtime.UnixStampMilli(1468181520, 499),
 			duration:  0,
-			expected:  UnixStampMilli(1468181520, 499),
+			expected:  xtime.UnixStampMilli(1468181520, 499),
 		},
 		{
 			name:      "positive duration",
-			timestamp: UnixStampMilli(1468181520, 499),
+			timestamp: xtime.UnixStampMilli(1468181520, 499),
 			duration:  20 * time.Second,
-			expected:  UnixStampMilli(1468181540, 499),
+			expected:  xtime.UnixStampMilli(1468181540, 499),
 		},
 		{
 			name:      "negative duration",
-			timestamp: UnixStampMilli(1468181520, 499),
+			timestamp: xtime.UnixStampMilli(1468181520, 499),
 			duration:  -20 * time.Second,
-			expected:  UnixStampMilli(1468181500, 499),
+			expected:  xtime.UnixStampMilli(1468181500, 499),
 		},
 	}
 
@@ -183,35 +183,35 @@ func TestTimestampMilli_Add(t *testing.T) {
 func TestTimestampMilli_AddDate(t *testing.T) {
 	testCases := []struct {
 		name      string
-		timestamp TimestampMilli
+		timestamp xtime.TimestampMilli
 		years     int
 		months    int
 		days      int
-		expected  TimestampMilli
+		expected  xtime.TimestampMilli
 	}{
 		{
 			name:      "zero values",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			timestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			years:     0,
 			months:    0,
 			days:      0,
-			expected:  DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			expected:  xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 		},
 		{
 			name:      "no overflow values",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			timestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			years:     3,
 			months:    2,
 			days:      1,
-			expected:  DateStampMilli(2019, time.September, 11, 21, 12, 0, 499, time.UTC),
+			expected:  xtime.DateStampMilli(2019, time.September, 11, 21, 12, 0, 499, time.UTC),
 		},
 		{
 			name:      "with overflow values",
-			timestamp: DateStampMilli(2016, time.December, 31, 21, 12, 0, 499, time.UTC),
+			timestamp: xtime.DateStampMilli(2016, time.December, 31, 21, 12, 0, 499, time.UTC),
 			years:     1,
 			months:    1,
 			days:      1,
-			expected:  DateStampMilli(2018, time.February, 1, 21, 12, 0, 499, time.UTC),
+			expected:  xtime.DateStampMilli(2018, time.February, 1, 21, 12, 0, 499, time.UTC),
 		},
 	}
 
@@ -228,21 +228,21 @@ func TestTimestampMilli_AddDate(t *testing.T) {
 func TestTimestampMilli_In(t *testing.T) {
 	testCases := []struct {
 		name      string
-		timestamp TimestampMilli
+		timestamp xtime.TimestampMilli
 		location  *time.Location
-		expected  TimestampMilli
+		expected  xtime.TimestampMilli
 	}{
 		{
 			name:      "UTC to UTC",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			timestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			location:  time.UTC,
-			expected:  DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			expected:  xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 		},
 		{
 			name:      "UTC to CET",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			timestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			location:  time.FixedZone("CET", 2*60*60),
-			expected:  DateStampMilli(2016, time.July, 10, 23, 12, 0, 499, time.FixedZone("CET", 2*60*60)),
+			expected:  xtime.DateStampMilli(2016, time.July, 10, 23, 12, 0, 499, time.FixedZone("CET", 2*60*60)),
 		},
 	}
 
@@ -260,18 +260,18 @@ func TestTimestampMilli_Local(t *testing.T) {
 	_, localOffset := time.Now().Local().Zone()
 	testCases := []struct {
 		name      string
-		timestamp TimestampMilli
-		expected  TimestampMilli
+		timestamp xtime.TimestampMilli
+		expected  xtime.TimestampMilli
 	}{
 		{
 			name:      "from UTC",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
-			expected:  DateStampMilli(2016, time.July, 10, 21, 12, localOffset, 499, time.FixedZone("local", localOffset)),
+			timestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			expected:  xtime.DateStampMilli(2016, time.July, 10, 21, 12, localOffset, 499, time.FixedZone("local", localOffset)),
 		},
 		{
 			name:      "from Local",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.Local),
-			expected:  DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.Local),
+			timestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.Local),
+			expected:  xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.Local),
 		},
 	}
 
@@ -288,19 +288,19 @@ func TestTimestampMilli_Local(t *testing.T) {
 func TestTimestampMilli_MarshalJSON(t *testing.T) {
 	testCases := []struct {
 		name          string
-		timestamp     TimestampMilli
+		timestamp     xtime.TimestampMilli
 		expectedBytes []byte
 		expectedErr   error
 	}{
 		{
 			name:          "UTC - with msec",
-			timestamp:     DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			timestamp:     xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			expectedBytes: []byte(`1468185120499`),
 			expectedErr:   nil,
 		},
 		{
 			name:          "zone info - no msec",
-			timestamp:     DateStampMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
+			timestamp:     xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
 			expectedBytes: []byte(`1468177920000`),
 			expectedErr:   nil,
 		},
@@ -325,19 +325,19 @@ func TestTimestampMilli_MarshalJSON(t *testing.T) {
 func TestTimestampMilli_MarshalText(t *testing.T) {
 	testCases := []struct {
 		name          string
-		timestamp     TimestampMilli
+		timestamp     xtime.TimestampMilli
 		expectedBytes []byte
 		expectedErr   error
 	}{
 		{
 			name:          "UTC - with msec",
-			timestamp:     DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			timestamp:     xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			expectedBytes: []byte(`1468185120499`),
 			expectedErr:   nil,
 		},
 		{
 			name:          "zone info - no msec",
-			timestamp:     DateStampMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
+			timestamp:     xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
 			expectedBytes: []byte(`1468177920000`),
 			expectedErr:   nil,
 		},
@@ -362,17 +362,17 @@ func TestTimestampMilli_MarshalText(t *testing.T) {
 func TestTimestampMilli_Millisecond(t *testing.T) {
 	testCases := []struct {
 		name      string
-		timestamp TimestampMilli
+		timestamp xtime.TimestampMilli
 		expected  int
 	}{
 		{
 			name:      "no msec",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 0, time.UTC),
+			timestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 0, time.UTC),
 			expected:  0,
 		},
 		{
 			name:      "with msec",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			timestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			expected:  499,
 		},
 	}
@@ -390,21 +390,21 @@ func TestTimestampMilli_Millisecond(t *testing.T) {
 func TestTimestampMilli_Round(t *testing.T) {
 	testCases := []struct {
 		name      string
-		timestamp TimestampMilli
+		timestamp xtime.TimestampMilli
 		duration  time.Duration
-		expected  TimestampMilli
+		expected  xtime.TimestampMilli
 	}{
 		{
 			name:      "nearest second",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 1, 499, time.UTC),
+			timestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 1, 499, time.UTC),
 			duration:  2 * time.Second,
-			expected:  DateStampMilli(2016, time.July, 10, 21, 12, 2, 0, time.UTC),
+			expected:  xtime.DateStampMilli(2016, time.July, 10, 21, 12, 2, 0, time.UTC),
 		},
 		{
 			name:      "nearest hour",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			timestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			duration:  time.Hour,
-			expected:  DateStampMilli(2016, time.July, 10, 21, 0, 0, 0, time.UTC),
+			expected:  xtime.DateStampMilli(2016, time.July, 10, 21, 0, 0, 0, time.UTC),
 		},
 	}
 
@@ -419,7 +419,7 @@ func TestTimestampMilli_Round(t *testing.T) {
 }
 
 func TestTimestampMilli_T(t *testing.T) {
-	x := DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC)
+	x := xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC)
 	expected := time.Date(2016, time.July, 10, 21, 12, 0, 499000000, time.UTC)
 	got := x.T()
 
@@ -431,21 +431,21 @@ func TestTimestampMilli_T(t *testing.T) {
 func TestTimestampMilli_Truncate(t *testing.T) {
 	testCases := []struct {
 		name      string
-		timestamp TimestampMilli
+		timestamp xtime.TimestampMilli
 		duration  time.Duration
-		expected  TimestampMilli
+		expected  xtime.TimestampMilli
 	}{
 		{
 			name:      "rounding down to a multiple of 2 seconds",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 1, 499, time.UTC),
+			timestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 1, 499, time.UTC),
 			duration:  2 * time.Second,
-			expected:  DateStampMilli(2016, time.July, 10, 21, 12, 0, 0, time.UTC),
+			expected:  xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 0, time.UTC),
 		},
 		{
 			name:      "rounding down to nearest hour",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			timestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			duration:  time.Hour,
-			expected:  DateStampMilli(2016, time.July, 10, 21, 0, 0, 0, time.UTC),
+			expected:  xtime.DateStampMilli(2016, time.July, 10, 21, 0, 0, 0, time.UTC),
 		},
 	}
 
@@ -463,18 +463,18 @@ func TestTimestampMilli_UTC(t *testing.T) {
 	_, localOffset := time.Now().Local().Zone()
 	testCases := []struct {
 		name      string
-		timestamp TimestampMilli
-		expected  TimestampMilli
+		timestamp xtime.TimestampMilli
+		expected  xtime.TimestampMilli
 	}{
 		{
 			name:      "from UTC",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
-			expected:  DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			timestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			expected:  xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 		},
 		{
 			name:      "from Local",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.FixedZone("local", localOffset)),
-			expected:  DateStampMilli(2016, time.July, 10, 21, 12, -localOffset, 499, time.UTC),
+			timestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.FixedZone("local", localOffset)),
+			expected:  xtime.DateStampMilli(2016, time.July, 10, 21, 12, -localOffset, 499, time.UTC),
 		},
 	}
 
@@ -491,17 +491,17 @@ func TestTimestampMilli_UTC(t *testing.T) {
 func TestTimestampMilli_UnixMilli(t *testing.T) {
 	testCases := []struct {
 		name      string
-		timestamp TimestampMilli
+		timestamp xtime.TimestampMilli
 		expected  int64
 	}{
 		{
 			name:      "no msec",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 0, time.UTC),
+			timestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 0, time.UTC),
 			expected:  1468185120000,
 		},
 		{
 			name:      "with msec",
-			timestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			timestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			expected:  1468185120499,
 		},
 	}
@@ -520,40 +520,40 @@ func TestTimestampMilli_UnmarshalJSON(t *testing.T) {
 	testCases := []struct {
 		name              string
 		data              []byte
-		expectedTimestamp TimestampMilli
+		expectedTimestamp xtime.TimestampMilli
 		expectedErr       error
 	}{
 		{
 			name:              "double-quoted string timestamp",
 			data:              []byte(`"1468185120499"`),
-			expectedTimestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			expectedTimestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			expectedErr:       nil,
 		},
 		{
 			name:              "number timestamp",
 			data:              []byte(`1468185120499`),
-			expectedTimestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			expectedTimestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			expectedErr:       nil,
 		},
 		{
 			name:              "RFC3339 string",
 			data:              []byte(`"2016-07-10T21:12:00+02:00"`),
-			expectedTimestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
+			expectedTimestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
 		},
 		{
 			name:              "RFC3339Milli string",
 			data:              []byte(`"2016-07-10T21:12:00.499+02:00"`),
-			expectedTimestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.FixedZone("CET", 2*60*60)),
+			expectedTimestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.FixedZone("CET", 2*60*60)),
 		},
 		{
 			name:              "RFC3339Nano string",
 			data:              []byte(`"2016-07-10T21:12:00.499+02:00"`),
-			expectedTimestamp: ToStampMilli(time.Date(2016, time.July, 10, 21, 12, 0, 499000000, time.FixedZone("CET", 2*60*60))),
+			expectedTimestamp: xtime.ToStampMilli(time.Date(2016, time.July, 10, 21, 12, 0, 499000000, time.FixedZone("CET", 2*60*60))),
 		},
 	}
 
 	for _, tc := range testCases {
-		var gotTime TimestampMilli
+		var gotTime xtime.TimestampMilli
 		gotErr := gotTime.UnmarshalJSON(tc.data)
 
 		if !tc.expectedTimestamp.Equal(gotTime.T()) {
@@ -571,34 +571,34 @@ func TestTimestampMilli_UnmarshalText(t *testing.T) {
 	testCases := []struct {
 		name              string
 		data              []byte
-		expectedTimestamp TimestampMilli
+		expectedTimestamp xtime.TimestampMilli
 		expectedErr       error
 	}{
 		{
 			name:              "timestamp",
 			data:              []byte(`1468185120499`),
-			expectedTimestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
+			expectedTimestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.UTC),
 			expectedErr:       nil,
 		},
 		{
 			name:              "RFC3339",
 			data:              []byte(`2016-07-10T21:12:00+02:00`),
-			expectedTimestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
+			expectedTimestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
 		},
 		{
 			name:              "RFC3339Milli",
 			data:              []byte(`2016-07-10T21:12:00.499+02:00`),
-			expectedTimestamp: DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.FixedZone("CET", 2*60*60)),
+			expectedTimestamp: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 499, time.FixedZone("CET", 2*60*60)),
 		},
 		{
 			name:              "RFC3339Nano",
 			data:              []byte(`2016-07-10T21:12:00.499+02:00`),
-			expectedTimestamp: ToStampMilli(time.Date(2016, time.July, 10, 21, 12, 0, 499000000, time.FixedZone("CET", 2*60*60))),
+			expectedTimestamp: xtime.ToStampMilli(time.Date(2016, time.July, 10, 21, 12, 0, 499000000, time.FixedZone("CET", 2*60*60))),
 		},
 	}
 
 	for _, tc := range testCases {
-		var gotTime TimestampMilli
+		var gotTime xtime.TimestampMilli
 		gotErr := gotTime.UnmarshalText(tc.data)
 
 		if !tc.expectedTimestamp.Equal(gotTime.T()) {

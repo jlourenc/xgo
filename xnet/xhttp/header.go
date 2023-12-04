@@ -252,9 +252,7 @@ const (
 	CacheControlStaleWhileRevalidate = "stale-while-revalidate"
 )
 
-var (
-	errHeaderNoDate = errors.New("no date header")
-)
+var errHeaderNoDate = errors.New("no date header")
 
 // HeaderExist returns whether the key exists in headers.
 func HeaderExist(headers http.Header, key string) bool {
@@ -294,7 +292,7 @@ func HeaderValues(headers http.Header, key string) (headerValues []string) {
 		}
 		headerValues = append(headerValues, fields...)
 	}
-	return
+	return headerValues
 }
 
 // ParseHeaderDate parses the Date header and returns its value as a time.Time if valid.

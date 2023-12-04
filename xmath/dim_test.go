@@ -7,7 +7,7 @@ package xmath_test
 import (
 	"testing"
 
-	. "github.com/jlourenc/xgo/xmath"
+	"github.com/jlourenc/xgo/xmath"
 )
 
 func TestDimInt(t *testing.T) {
@@ -51,7 +51,7 @@ func TestDimInt(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := DimInt(tc.x, tc.y)
+			got := xmath.DimInt(tc.x, tc.y)
 
 			if got != tc.expected {
 				t.Errorf("expected %d; got %d", tc.expected, got)
@@ -101,7 +101,7 @@ func TestDimInt64(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := DimInt64(tc.x, tc.y)
+			got := xmath.DimInt64(tc.x, tc.y)
 
 			if got != tc.expected {
 				t.Errorf("expected %d; got %d", tc.expected, got)
@@ -139,7 +139,7 @@ func TestDimUint(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := DimUint(tc.x, tc.y)
+			got := xmath.DimUint(tc.x, tc.y)
 
 			if got != tc.expected {
 				t.Errorf("expected %d; got %d", tc.expected, got)
@@ -177,7 +177,7 @@ func TestDimUint64(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := DimUint64(tc.x, tc.y)
+			got := xmath.DimUint64(tc.x, tc.y)
 
 			if got != tc.expected {
 				t.Errorf("expected %d; got %d", tc.expected, got)
@@ -215,7 +215,7 @@ func TestMaxInt(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := MaxInt(tc.x, tc.y)
+			got := xmath.MaxInt(tc.x, tc.y)
 
 			if got != tc.expected {
 				t.Errorf("expected %d; got %d", tc.expected, got)
@@ -253,7 +253,7 @@ func TestMaxInt64(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := MaxInt64(tc.x, tc.y)
+			got := xmath.MaxInt64(tc.x, tc.y)
 
 			if got != tc.expected {
 				t.Errorf("expected %d; got %d", tc.expected, got)
@@ -291,7 +291,7 @@ func TestMaxUint(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := MaxUint(tc.x, tc.y)
+			got := xmath.MaxUint(tc.x, tc.y)
 
 			if got != tc.expected {
 				t.Errorf("expected %d; got %d", tc.expected, got)
@@ -329,7 +329,7 @@ func TestMaxUint64(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := MaxUint64(tc.x, tc.y)
+			got := xmath.MaxUint64(tc.x, tc.y)
 
 			if got != tc.expected {
 				t.Errorf("expected %d; got %d", tc.expected, got)
@@ -367,7 +367,7 @@ func TestMinInt(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := MinInt(tc.x, tc.y)
+			got := xmath.MinInt(tc.x, tc.y)
 
 			if got != tc.expected {
 				t.Errorf("expected %d; got %d", tc.expected, got)
@@ -405,7 +405,7 @@ func TestMinInt64(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := MinInt64(tc.x, tc.y)
+			got := xmath.MinInt64(tc.x, tc.y)
 
 			if got != tc.expected {
 				t.Errorf("expected %d; got %d", tc.expected, got)
@@ -443,7 +443,7 @@ func TestMinUint(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := MinUint(tc.x, tc.y)
+			got := xmath.MinUint(tc.x, tc.y)
 
 			if got != tc.expected {
 				t.Errorf("expected %d; got %d", tc.expected, got)
@@ -481,7 +481,7 @@ func TestMinUint64(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := MinUint64(tc.x, tc.y)
+			got := xmath.MinUint64(tc.x, tc.y)
 
 			if got != tc.expected {
 				t.Errorf("expected %d; got %d", tc.expected, got)

@@ -16,7 +16,7 @@ import (
 // repeatedly calling Unwrap.
 //
 // An error matches target if the error's concrete value is assignable to the value
-// pointed to by target, or if the error has a method As(interface{}) bool such that
+// pointed to by target, or if the error has a method As(any) bool such that
 // As(target) returns true. In the latter case, the As method is responsible for
 // setting target.
 //
@@ -27,7 +27,7 @@ import (
 // error, or to any interface type.
 //
 // It is the drop-in replacement for errors.As.
-func As(err error, target interface{}) bool {
+func As(err error, target any) bool {
 	return errors.As(err, target)
 }
 
@@ -85,7 +85,7 @@ func Wrap(err error, message string) error {
 // Wrapf returns an error annotating err with the format specifier and a stack trace,
 // if enabled and err does not already contain one, at the point Wrap is called.
 // If err is nil, Wrap returns nil.
-func Wrapf(err error, format string, args ...interface{}) error {
+func Wrapf(err error, format string, args ...any) error {
 	if err == nil {
 		return nil
 	}
@@ -104,8 +104,8 @@ func Wrapf(err error, format string, args ...interface{}) error {
 }
 
 type withWrap struct {
-	msg string
 	err error
+	msg string
 }
 
 // Error makes withWrap implement the error interface.

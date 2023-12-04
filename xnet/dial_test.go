@@ -6,11 +6,12 @@ package xnet_test
 
 import (
 	"context"
+	"errors"
 	"net"
 	"testing"
 	"time"
 
-	. "github.com/jlourenc/xgo/xnet"
+	"github.com/jlourenc/xgo/xnet"
 )
 
 func listenTCP() (net.Listener, string, error) {
@@ -20,23 +21,25 @@ func listenTCP() (net.Listener, string, error) {
 	}
 	_, port, err := net.SplitHostPort(ln.Addr().String())
 	if err != nil {
-		ln.Close()
+		if cerr := ln.Close(); cerr != nil {
+			return nil, "", errors.Join(err, cerr)
+		}
 		return nil, "", err
 	}
 	return ln, port, nil
 }
 
-func assertDial(t *testing.T, expectedErr bool, conn net.Conn, err error) {
-	t.Helper()
+func assertDial(tb testing.TB, expectedErr bool, conn net.Conn, err error) {
+	tb.Helper()
 
 	isErrNil := err == nil
 	if expectedErr == isErrNil {
-		t.Errorf("expected error is %t, got %v", expectedErr, err)
+		tb.Errorf("expected error is %t, got %v", expectedErr, err)
 	}
 
 	isConnNil := conn == nil
 	if expectedErr != isConnNil {
-		t.Errorf("expected connection is %t, got %v", !expectedErr, conn)
+		tb.Errorf("expected connection is %t, got %v", !expectedErr, conn)
 	}
 }
 
@@ -44,7 +47,7 @@ func TestDial(t *testing.T) {
 	testCases := []struct {
 		name        string
 		network     string
-		options     []DialOption
+		options     []xnet.DialOption
 		expectedErr bool
 	}{
 		{
@@ -54,13 +57,13 @@ func TestDial(t *testing.T) {
 		},
 		{
 			name:    "valid network",
-			network: NetworkTCP,
-			options: []DialOption{
-				DialConnectDeadline(time.Now().Add(5 * time.Second)),
-				DialConnectTimeout(5 * time.Second),
-				DialKeepAlive(30 * time.Second),
-				DialReadTimeout(5 * time.Second),
-				DialWriteTimeout(5 * time.Second),
+			network: xnet.NetworkTCP,
+			options: []xnet.DialOption{
+				xnet.DialConnectDeadline(time.Now().Add(5 * time.Second)),
+				xnet.DialConnectTimeout(5 * time.Second),
+				xnet.DialKeepAlive(30 * time.Second),
+				xnet.DialReadTimeout(5 * time.Second),
+				xnet.DialWriteTimeout(5 * time.Second),
 			},
 			expectedErr: false,
 		},
@@ -74,7 +77,7 @@ func TestDial(t *testing.T) {
 			}
 			defer ln.Close()
 
-			conn, err := Dial(tc.network, net.JoinHostPort("127.0.0.1", port), tc.options...)
+			conn, err := xnet.Dial(tc.network, net.JoinHostPort("127.0.0.1", port), tc.options...)
 
 			assertDial(t, tc.expectedErr, conn, err)
 		})
@@ -85,7 +88,7 @@ func TestDialContext(t *testing.T) {
 	testCases := []struct {
 		name        string
 		network     string
-		options     []DialOption
+		options     []xnet.DialOption
 		expectedErr bool
 	}{
 		{
@@ -95,13 +98,13 @@ func TestDialContext(t *testing.T) {
 		},
 		{
 			name:    "valid network",
-			network: NetworkTCP,
-			options: []DialOption{
-				DialConnectDeadline(time.Now().Add(5 * time.Second)),
-				DialConnectTimeout(5 * time.Second),
-				DialKeepAlive(30 * time.Second),
-				DialReadTimeout(5 * time.Second),
-				DialWriteTimeout(5 * time.Second),
+			network: xnet.NetworkTCP,
+			options: []xnet.DialOption{
+				xnet.DialConnectDeadline(time.Now().Add(5 * time.Second)),
+				xnet.DialConnectTimeout(5 * time.Second),
+				xnet.DialKeepAlive(30 * time.Second),
+				xnet.DialReadTimeout(5 * time.Second),
+				xnet.DialWriteTimeout(5 * time.Second),
 			},
 			expectedErr: false,
 		},
@@ -115,7 +118,7 @@ func TestDialContext(t *testing.T) {
 			}
 			defer ln.Close()
 
-			conn, err := DialContext(context.Background(), tc.network, net.JoinHostPort("127.0.0.1", port), tc.options...)
+			conn, err := xnet.DialContext(context.Background(), tc.network, net.JoinHostPort("127.0.0.1", port), tc.options...)
 
 			assertDial(t, tc.expectedErr, conn, err)
 		})

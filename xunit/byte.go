@@ -132,7 +132,7 @@ strLoop:
 
 // Get returns the Byte value.
 // It makes Byte implement the flag package Getter interface.
-func (b Byte) Get() interface{} { return b }
+func (b Byte) Get() any { return b }
 
 // MarshalText implements the encoding.TextMarshaler interface.
 // The encoding is the same as returned by String.
@@ -178,7 +178,7 @@ func (b Byte) String() string {
 
 // Type returns a string representation of Byte type.
 // It makes Byte implement the pflag Value interface.
-func (b Byte) Type() string { return "xunit_byte" }
+func (Byte) Type() string { return "xunit_byte" }
 
 // UnmarshalText implements the encoding.TextUnmarshaler interface.
 // The text is expected in a form accepted by ParseByte.

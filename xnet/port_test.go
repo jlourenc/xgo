@@ -11,58 +11,58 @@ import (
 	"testing"
 	"time"
 
-	. "github.com/jlourenc/xgo/xnet"
+	"github.com/jlourenc/xgo/xnet"
 )
 
 func TestFreePort(t *testing.T) {
 	testCases := []struct {
 		name        string
-		options     []ListenConfigOption
+		options     []xnet.ListenConfigOption
 		network     string
 		expectedErr bool
 	}{
 		{
 			name:        "unsupported network",
-			network:     NetworkUnix,
+			network:     xnet.NetworkUnix,
 			expectedErr: true,
 		},
 		{
 			name:        "tcp network - success",
-			network:     NetworkTCP,
+			network:     xnet.NetworkTCP,
 			expectedErr: false,
 		},
 		{
 			name:        "udp network - success",
-			network:     NetworkUDP,
+			network:     xnet.NetworkUDP,
 			expectedErr: false,
 		},
 		{
 			name: "tcp network - failure",
-			options: []ListenConfigOption{
-				ListenConfigControl(func(network, address string, c syscall.RawConn) error {
+			options: []xnet.ListenConfigOption{
+				xnet.ListenConfigControl(func(network, address string, c syscall.RawConn) error {
 					return errors.New("always error")
 				}),
-				ListenConfigKeepAlive(time.Second),
+				xnet.ListenConfigKeepAlive(time.Second),
 			},
-			network:     NetworkTCP,
+			network:     xnet.NetworkTCP,
 			expectedErr: true,
 		},
 		{
 			name: "udp network - failure",
-			options: []ListenConfigOption{
-				ListenConfigControl(func(network, address string, c syscall.RawConn) error {
+			options: []xnet.ListenConfigOption{
+				xnet.ListenConfigControl(func(network, address string, c syscall.RawConn) error {
 					return errors.New("always error")
 				}),
-				ListenConfigKeepAlive(time.Second),
+				xnet.ListenConfigKeepAlive(time.Second),
 			},
-			network:     NetworkUDP,
+			network:     xnet.NetworkUDP,
 			expectedErr: true,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			port, err := FreePort(context.Background(), tc.network, tc.options...)
+			port, err := xnet.FreePort(context.Background(), tc.network, tc.options...)
 
 			isErrNil := err == nil
 			if tc.expectedErr == isErrNil {
@@ -131,7 +131,7 @@ func TestParsePort(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			port, err := ParsePort(tc.port, tc.allowZero)
+			port, err := xnet.ParsePort(tc.port, tc.allowZero)
 
 			if tc.expectedPort != port {
 				t.Errorf("expected %d, got %d", tc.expectedPort, port)
