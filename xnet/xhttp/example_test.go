@@ -5,11 +5,14 @@
 package xhttp_test
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/jlourenc/xgo/xnet/xhttp"
+	"github.com/jlourenc/xgo/xnet/xhttp/xhttptrace"
 )
 
 func ExampleHeaderExist() {
@@ -43,6 +46,33 @@ func ExampleHeaderValues() {
 
 	fmt.Printf("got: %s", headerValues)
 	// Output: got: [key1=val1 key2 key3=val3 key4]
+}
+
+func ExampleNewRetryTransport() {
+	client := http.Client{
+		Transport: xhttp.NewRetryTransport(
+			xhttp.RetryTransportInitialInterval(100*time.Millisecond),
+			xhttp.RetryTransportIntervalMultiplier(1.2),
+			xhttp.RetryTransportJitterFactor(0.1),
+			xhttp.RetryTransportMaxInterval(10*time.Second),
+		),
+		Timeout: 30 * time.Second,
+	}
+
+	ctx := xhttptrace.WithClientTrace(context.Background(), &xhttptrace.ClientTrace{
+		Retry: func(ri xhttptrace.RetryInfo) {
+			fmt.Printf("retry count: %d, status code: %d", ri.RetryCount, ri.StatusCode)
+		},
+	})
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "http://example.com", http.NoBody)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if _, err = client.Do(req); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func ExampleParseHeaderDate() {
