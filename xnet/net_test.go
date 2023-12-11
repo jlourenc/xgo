@@ -145,24 +145,6 @@ func assertOperation(tb testing.TB, expectedErr bool, n int, err error) {
 	}
 }
 
-func handleConnections(tb testing.TB, ln net.Listener, handler func(net.Conn) error) {
-	tb.Helper()
-
-	for {
-		conn, err := ln.Accept()
-		if err != nil {
-			return
-		}
-
-		if err := handler(conn); err != nil {
-			tb.Logf("connection handling error: %s", err)
-		}
-		if err := conn.Close(); err != nil {
-			tb.Logf("connection closure error: %s", err)
-		}
-	}
-}
-
 func dialTCP(tb testing.TB, handler func(net.Conn) error, options ...xnet.DialOption) (net.Listener, net.Conn, error) {
 	tb.Helper()
 
@@ -171,7 +153,17 @@ func dialTCP(tb testing.TB, handler func(net.Conn) error, options ...xnet.DialOp
 		return nil, nil, err
 	}
 
-	go handleConnections(tb, ln, handler)
+	go func() {
+		for {
+			conn, err := ln.Accept()
+			if err != nil {
+				return
+			}
+
+			_ = handler(conn)
+			_ = conn.Close()
+		}
+	}()
 
 	conn, err := xnet.DialContext(context.Background(), xnet.NetworkTCP, net.JoinHostPort("127.0.0.1", port), options...)
 	if err != nil {
