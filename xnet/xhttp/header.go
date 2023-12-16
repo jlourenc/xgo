@@ -200,6 +200,8 @@ const (
 
 // HTTP non-standard headers, but widely used.
 const (
+	// https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/
+	HeaderIdempotencyKey = "Idempotency-Key"
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
 	HeaderXContentTypeOptions = "X-Content-Type-Options"
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-DNS-Prefetch-Control
@@ -213,6 +215,7 @@ const (
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
 	HeaderXFrameOptions = "X-Frame-Options"
 	// https://tools.ietf.org/id/draft-idempotency-header-01.html
+	// Deprecated: use HeaderIdempotencyKey instead.
 	HeaderXIdempotencyKey = "X-Idempotency-Key"
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection
 	HeaderXXSSProtection = "X-XSS-Protection"
