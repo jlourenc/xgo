@@ -16,19 +16,19 @@ import (
 
 // HTTP standard headers.
 const (
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.2
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-12.5.1
 	HeaderAccept = "Accept"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.3
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-12.5.2
 	HeacerAcceptCharset = "Accept-Charset"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.4
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-12.5.3
 	HeaderAcceptEncoding = "Accept-Encoding"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.5
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-12.5.4
 	HeaderAcceptLanguage = "Accept-Language"
 	// https://datatracker.ietf.org/doc/html/rfc5789#section-3.1
 	HeaderAcceptPath = "Accept-Patch"
 	// https://www.w3.org/TR/ldp/#header-accept-post
 	HeaderAcceptPost = "Accept-Post"
-	// https://datatracker.ietf.org/doc/html/rfc7233#section-2.3
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-14.3
 	HeaderAcceptRanges = "Accept-Ranges"
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials
 	HeaderAccessControlAllowCredentials = "Access-Control-Allow-Credentials"
@@ -46,37 +46,37 @@ const (
 	HeaderAccessControlRequestHeaders = "Access-Control-Request-Headers"
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Request-Method
 	HeaderAccessControlRequestMethod = "Access-Control-Request-Method"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.1
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.1
 	HeaderAge = "Age"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-7.4.1
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-10.2.1
 	HeaderAllow = "Allow"
 	// https://datatracker.ietf.org/doc/html/rfc7838#section-3
 	HeaderAltSvc = "Alt-Svc"
-	// https://datatracker.ietf.org/doc/html/rfc7235#section-4.2
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-11.6.2
 	HeaderAuthorization = "Authorization"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.2
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.2
 	HeaderCacheControl = "Cache-Control"
 	// https://www.w3.org/TR/clear-site-data/#header
 	HeaderClearSiteData = "Clear-Site-Data"
-	// https://datatracker.ietf.org/doc/html/rfc7230#section-6.1
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-7.6.1
 	HeaderConnection = "Connection"
 	// https://datatracker.ietf.org/doc/html/rfc6266#section-4
 	HeaderContentDisposition = "Content-Disposition"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.2.2
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-8.4
 	HeaderContentEncoding = "Content-Encoding"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.2.2
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-8.5
 	HeaderContentLanguage = "Content-Language"
-	// https://datatracker.ietf.org/doc/html/rfc7230#section-3.3.2
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-8.6
 	HeaderContentLength = "Content-Length"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.4.2
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-8.7
 	HeaderContentLocation = "Content-Location"
-	// https://datatracker.ietf.org/doc/html/rfc7233#section-4.2
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-14.4
 	HeaderContentRange = "Content-Range"
 	// https://www.w3.org/TR/CSP3/#csp-header
 	HeaderContentSecurityPolicy = "Content-Security-Policy"
 	// https://www.w3.org/TR/CSP3/#cspro-header
 	HeaderContentSecurityPolicyReportOnly = "Content-Security-Policy-Report-Only"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.1.5
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-8.3
 	HeaderContentType = "Content-Type"
 	// https://datatracker.ietf.org/doc/html/rfc6265#section-5.4
 	HeaderCookie = "Cookie"
@@ -86,65 +86,65 @@ const (
 	HeaderCrossOriginOpenerPolicy = "Cross-Origin-Opener-Policy"
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Resource-Policy
 	HeaderCrossOriginResourcePolicy = "Cross-Origin-Resource-Policy"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.2
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-6.6.1
 	HeaderDate = "Date"
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Digest
 	HeaderDigest = "Digest"
-	// https://datatracker.ietf.org/doc/html/rfc7232#section-2.3
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-8.8.3
 	HeaderEtag = "Etag"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-5.1.1
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-10.1.1
 	HeaderExpect = "Expect"
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Expect-CT
 	HeaderExpectCT = "Expect-CT"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.3
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.3
 	HeaderExpires = "Expires"
 	// https://datatracker.ietf.org/doc/html/rfc7239#section-4
 	HeaderForwarded = "Forwarded"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-5.5.1
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-10.1.2
 	HeaderFrom = "From"
-	// https://datatracker.ietf.org/doc/html/rfc7230#section-5.4
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-7.2
 	HeaderHost = "Host"
 	// https://datatracker.ietf.org/doc/html/rfc7540#section-3.2.1
 	HeaderHTTP2Settings = "HTTP2-Settings"
-	// https://datatracker.ietf.org/doc/html/rfc7232#section-3.1
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-13.1.1
 	HeaderIfMatch = "If-Match"
-	// https://datatracker.ietf.org/doc/html/rfc7232#section-3.3
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-13.1.3
 	HeaderIfModifiedSince = "If-Modified-Since"
-	// https://datatracker.ietf.org/doc/html/rfc7232#section-3.2
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-13.1.2
 	HeaderIfNoneMatch = "If-None-Match"
-	// https://datatracker.ietf.org/doc/html/rfc7233#section-3.2
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-13.1.5
 	HeaderIfRange = "If-Range"
-	// https://datatracker.ietf.org/doc/html/rfc7232#section-3.4
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-13.1.4
 	HeaderIfUnmodifiedSince = "If-Unmodified-Since"
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Keep-Alive
 	HeaderKeepAlive = "Keep-Alive"
-	// https://datatracker.ietf.org/doc/html/rfc7232#section-2.2
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-8.8.2
 	HeaderLastModified = "Last-Modified"
-	// https://datatracker.ietf.org/doc/html/rfc5988#section-5
+	// https://datatracker.ietf.org/doc/html/rfc8288#section-3
 	HeaderLink = "Link"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.2
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-10.2.2
 	HeaderLocation = "Location"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-5.1.2
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-7.6.2
 	HeaderMaxForwards = "Max-Forwards"
 	// https://www.w3.org/TR/network-error-logging/#nel-response-header
 	HeaderNEL = "NEL"
 	// https://datatracker.ietf.org/doc/html/rfc6454#section-7
 	HeaderOrigin = "Origin"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.4
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.4
 	HeaderPragma = "Pragma"
 	// https://datatracker.ietf.org/doc/html/rfc7240#section-2
 	HeaderPrefer = "Prefer"
-	// https://datatracker.ietf.org/doc/html/rfc7235#section-4.3
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-11.7.1
 	HeaderProxyAuthenticate = "Proxy-Authenticate"
-	// https://datatracker.ietf.org/doc/html/rfc7235#section-4.4
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-11.7.2
 	HeaderProxyAuthorization = "Proxy-Authorization"
-	// https://datatracker.ietf.org/doc/html/rfc7233#section-3.1
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-14.2
 	HeaderRange = "Range"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-5.5.2
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-10.1.3
 	HeaderReferer = "Referer"
 	// https://www.w3.org/TR/referrer-policy/
 	HeaderReferrerPolicy = "Referrer-Policy"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.3
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-10.2.3
 	HeaderRetryAfter = "Retry-After"
 	// https://wicg.github.io/savedata/#save-data-request-header-field
 	HeaderSaveData = "Save-Data"
@@ -162,7 +162,7 @@ const (
 	HeaderSecWebSocketProtocol = "Sec-WebSocket-Protocol"
 	// https://datatracker.ietf.org/doc/html/rfc6455#section-11.3.5
 	HeaderSecWebSocketVersion = "Sec-WebSocket-Version"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-7.4.2
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-10.2.4
 	HeaderServer = "Server"
 	// https://www.w3.org/TR/server-timing/
 	HeaderServerTiming = "Server-Timing"
@@ -172,29 +172,29 @@ const (
 	HeaderSourceMap = "SourceMap"
 	// https://datatracker.ietf.org/doc/html/rfc6797#section-6.1
 	HeaderStrictTransportSecurity = "Strict-Transport-Security"
-	// https://datatracker.ietf.org/doc/html/rfc7230#section-4.3
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-10.1.4
 	HeaderTE = "TE"
 	// https://www.w3.org/TR/resource-timing-2/#sec-timing-allow-origin
 	HeaderTimingAllowOrigin = "Timing-Allow-Origin"
-	// https://datatracker.ietf.org/doc/html/rfc7230#section-4.4
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-6.6.2
 	HeaderTrailer = "Trailer"
-	// https://datatracker.ietf.org/doc/html/rfc7230#section-3.3.1
+	// https://datatracker.ietf.org/doc/html/rfc9112#section-6.1
 	HeaderTransferEncoding = "Transfer-Encoding"
-	// https://datatracker.ietf.org/doc/html/rfc7230#section-6.7
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-7.8
 	HeaderUpgrade = "Upgrade"
 	// https://www.w3.org/TR/upgrade-insecure-requests/#preference
 	HeaderUpgradeInsecureRequests = "Upgrade-Insecure-Requests"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-5.5.3
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-10.1.5
 	HeaderUserAgent = "User-Agent"
-	// https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.4
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-12.5.5
 	HeaderVary = "Vary"
-	// https://datatracker.ietf.org/doc/html/rfc7230#section-5.7.1
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-7.6.3
 	HeaderVia = "Via"
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Want-Digest
 	HeaderWantDigest = "Want-Digest"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.5
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.5
 	HeaderWarning = "Warning"
-	// https://datatracker.ietf.org/doc/html/rfc7235#section-4.1
+	// https://datatracker.ietf.org/doc/html/rfc9110#section-11.6.1
 	HeaderWWWAuthenticate = "WWW-Authenticate"
 )
 
@@ -225,29 +225,29 @@ const (
 const (
 	// https://datatracker.ietf.org/doc/html/rfc8246#section-2
 	CacheControlImmutable = "immutable"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.2.1.1 & https://datatracker.ietf.org/doc/html/rfc7234#section-5.2.2.8
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.2.1.1 & https://datatracker.ietf.org/doc/html/rfc9111#section-5.2.2.1
 	CacheControlMaxAge = "max-age"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.2.1.2
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.2.1.2
 	CacheControlMaxStale = "max-stale"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.2.1.3
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.2.1.3
 	CacheControlMinFresh = "min-fresh"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.2.2.1
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.2.2.2
 	CacheControlMustRevalidate = "must-revalidate"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.2.1.4 & https://datatracker.ietf.org/doc/html/rfc7234#section-5.2.2.2
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.2.1.4 & https://datatracker.ietf.org/doc/html/rfc9111#section-5.2.2.4
 	CacheControlNoCache = "no-cache"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.2.1.5 & https://datatracker.ietf.org/doc/html/rfc7234#section-5.2.2.3
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.2.1.5 & https://datatracker.ietf.org/doc/html/rfc9111#section-5.2.2.5
 	CacheControlNoStore = "no-store"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.2.1.6 & https://datatracker.ietf.org/doc/html/rfc7234#section-5.2.2.4
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.2.1.6 & https://datatracker.ietf.org/doc/html/rfc9111#section-5.2.2.6
 	CacheControlNoTransform = "no-transform"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.2.1.7
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.2.1.7
 	CacheControlOnlyIfCached = "only-if-cached"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.2.2.5
-	CacheControlPublic = "public"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.2.2.6
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.2.2.7
 	CacheControlPrivate = "private"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.2.2.7
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.2.2.8
 	CacheControlProxyRevalidate = "proxy-revalidate"
-	// https://datatracker.ietf.org/doc/html/rfc7234#section-5.2.2.9
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.2.2.9
+	CacheControlPublic = "public"
+	// https://datatracker.ietf.org/doc/html/rfc9111#section-5.2.2.10
 	CacheControlSMaxAge = "s-maxage"
 	// https://datatracker.ietf.org/doc/html/rfc5861#section-4
 	CacheControlStaleIfError = "stale-if-error"
@@ -285,7 +285,7 @@ func HeaderKeyValues(headers http.Header, key string) map[string]string {
 
 // HeaderValues returns all values associated with the given key, or nil if the key does not exist.
 // It is case insensitive; textproto.CanonicalMIMEHeaderKey is used to canonicalize the provided key.
-// As per Section 4.2 of the RFC 2616 (http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2),
+// As per Section 5.3 of the RFC 9110 (https://datatracker.ietf.org/doc/html/rfc9110#section-5.3),
 // values from multiple occurrences of a header should be concatenated, if the header's value is a comma-separated list.
 func HeaderValues(headers http.Header, key string) (headerValues []string) {
 	for _, value := range headers.Values(key) {
@@ -300,7 +300,7 @@ func HeaderValues(headers http.Header, key string) (headerValues []string) {
 
 // ParseHeaderDate parses the Date header and returns its value as a time.Time if valid.
 // An error is returned otherwise.
-// https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.1
+// https://datatracker.ietf.org/doc/html/rfc9110#section-5.6.7
 func ParseHeaderDate(headers http.Header) (time.Time, error) {
 	date := headers.Get(HeaderDate)
 	if date == "" {
