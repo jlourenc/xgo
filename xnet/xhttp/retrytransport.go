@@ -113,12 +113,12 @@ func (t *retryTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 
 func computeWaitDuration(interval time.Duration, jitterFactor float64, headers http.Header) time.Duration {
 	if retryAfter := headers.Get(HeaderRetryAfter); retryAfter != "" {
-		if date, err := time.Parse(time.RFC1123, retryAfter); err == nil {
-			return time.Until(date)
-		}
-
 		if secs, err := strconv.Atoi(retryAfter); err == nil {
 			return time.Duration(secs) * time.Second
+		}
+
+		if date, err := http.ParseTime(retryAfter); err == nil {
+			return time.Until(date)
 		}
 	}
 

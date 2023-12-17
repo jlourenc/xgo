@@ -45,7 +45,7 @@ func TestRetryTransport_RoundTrip(t *testing.T) {
 		StatusCode: http.StatusRequestEntityTooLarge,
 	}
 	resp429 := &http.Response{
-		Header:     http.Header{xhttp.HeaderRetryAfter: []string{time.Now().Add(50 * time.Millisecond).Format(time.RFC1123)}},
+		Header:     http.Header{xhttp.HeaderRetryAfter: []string{time.Now().Add(50 * time.Millisecond).Format(http.TimeFormat)}},
 		StatusCode: http.StatusTooManyRequests,
 	}
 	resp503 := &http.Response{StatusCode: http.StatusServiceUnavailable}
