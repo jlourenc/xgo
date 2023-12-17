@@ -14,10 +14,10 @@ import (
 )
 
 const (
-	defaultInitialInterval    = 200 * time.Millisecond
-	defaultIntervalMultiplier = 1.5
-	defaultJitterFactor       = 0.2
-	defaultMaxInterval        = 30 * time.Second
+	retryTransportDefaultInitialInterval    = 200 * time.Millisecond
+	retryTransportDefaultIntervalMultiplier = 1.5
+	retryTransportDefaultJitterFactor       = 0.2
+	retryTransportDefaultMaxInterval        = 30 * time.Second
 )
 
 // RetryTransport is an HTTP transport that implements HTTP retries according to
@@ -36,10 +36,10 @@ type retryTransport struct {
 // notably the backoff policy and the next round tripper in the chain.
 func NewRetryTransport(options ...RetryTransportOption) http.RoundTripper {
 	t := &retryTransport{
-		initialInterval:    defaultInitialInterval,
-		intervalMultiplier: defaultIntervalMultiplier,
-		jitterFactor:       defaultJitterFactor,
-		maxInterval:        defaultMaxInterval,
+		initialInterval:    retryTransportDefaultInitialInterval,
+		intervalMultiplier: retryTransportDefaultIntervalMultiplier,
+		jitterFactor:       retryTransportDefaultJitterFactor,
+		maxInterval:        retryTransportDefaultMaxInterval,
 		next:               http.DefaultTransport,
 	}
 
@@ -58,8 +58,7 @@ func NewRetryTransport(options ...RetryTransportOption) http.RoundTripper {
 // See HTTP semantics defined in: https://datatracker.ietf.org/doc/html/rfc9110.
 func (t *retryTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	ctx := req.Context()
-	reqRetryable := isRequestRetryable(req.Method, req.Header)
-	reqRewindable := req.Body == nil || req.Body == http.NoBody || req.GetBody != nil
+	reqRetryable := isRequestIdempotent(req) && isRequestRewindable(req)
 	retryCount := 0
 	retryInterval := t.initialInterval
 
@@ -74,7 +73,7 @@ func (t *retryTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 			return resp, err
 		}
 
-		if !isResponseRetryable(resp.StatusCode, resp.Header) || !reqRetryable || !reqRewindable {
+		if !reqRetryable || !isResponseRetryable(resp) {
 			return resp, nil
 		}
 
@@ -132,33 +131,6 @@ func computeWaitDuration(interval time.Duration, jitterFactor float64, headers h
 
 	// returns a random value in the half-open interval [interval - delta, interval + delta).
 	return time.Duration(minInterval + (rand.Float64() * delta * 2)) //nolint:gosec // rand is used in a non security-sensitive scenario
-}
-
-func isRequestRetryable(method string, headers http.Header) bool {
-	switch method {
-	// idempotent methods: https://datatracker.ietf.org/doc/html/rfc9110#name-idempotent-methods
-	case http.MethodDelete, http.MethodGet, http.MethodHead, http.MethodOptions, http.MethodPut, http.MethodTrace:
-		return true
-	default:
-		// Any method is retryable if either Idempotency-Key or X-Idempotency-Key request header is set.
-		return headers.Get(HeaderIdempotencyKey) != "" || headers.Get(HeaderXIdempotencyKey) != ""
-	}
-}
-
-func isResponseRetryable(statusCode int, headers http.Header) bool {
-	switch statusCode {
-	// 4xx status codes
-	case http.StatusRequestTimeout, http.StatusTooEarly, http.StatusTooManyRequests:
-		return true
-	// 413 is retryable if Retry-After header is set.
-	case http.StatusRequestEntityTooLarge:
-		return headers.Get(HeaderRetryAfter) != ""
-	// 5xx status codes
-	case http.StatusInternalServerError, http.StatusBadGateway, http.StatusServiceUnavailable, http.StatusGatewayTimeout:
-		return true
-	default:
-		return false
-	}
 }
 
 type (
