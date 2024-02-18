@@ -25,7 +25,7 @@ func TestContextClientTrace(t *testing.T) {
 		{
 			name: "specified trace",
 			trace: &xhttptrace.ClientTrace{
-				Retry: func(ri xhttptrace.RetryInfo) {},
+				Retry: func(_ xhttptrace.RetryInfo) {},
 			},
 		},
 	}
