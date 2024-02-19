@@ -39,7 +39,7 @@ func TestFreePort(t *testing.T) {
 		{
 			name: "tcp network - failure",
 			options: []xnet.ListenConfigOption{
-				xnet.ListenConfigControl(func(network, address string, c syscall.RawConn) error {
+				xnet.ListenConfigControl(func(_, _ string, _ syscall.RawConn) error {
 					return errors.New("always error")
 				}),
 				xnet.ListenConfigKeepAlive(time.Second),
@@ -50,7 +50,7 @@ func TestFreePort(t *testing.T) {
 		{
 			name: "udp network - failure",
 			options: []xnet.ListenConfigOption{
-				xnet.ListenConfigControl(func(network, address string, c syscall.RawConn) error {
+				xnet.ListenConfigControl(func(_, _ string, _ syscall.RawConn) error {
 					return errors.New("always error")
 				}),
 				xnet.ListenConfigKeepAlive(time.Second),

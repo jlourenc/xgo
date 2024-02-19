@@ -26,13 +26,13 @@ func TestExist(t *testing.T) {
 		{
 			name:     "only lower values",
 			n:        1e9,
-			cmp:      func(i int) int { return -1 },
+			cmp:      func(_ int) int { return -1 },
 			expected: false,
 		},
 		{
 			name:     "only greater values",
 			n:        1e9,
-			cmp:      func(i int) int { return +1 },
+			cmp:      func(_ int) int { return +1 },
 			expected: false,
 		},
 		{

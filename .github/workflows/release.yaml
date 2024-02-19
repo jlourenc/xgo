@@ -13,13 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Semantic release
-        uses: cycjimmy/semantic-release-action@v3
+        uses: cycjimmy/semantic-release-action@v4
         with:
           branches: '[ "main" ]'
           extra_plugins: |
-            conventional-changelog-conventionalcommits@v5
-          semantic_version: v19
+            conventional-changelog-conventionalcommits@v7
+          semantic_version: v23
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
