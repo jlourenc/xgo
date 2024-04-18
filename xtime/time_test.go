@@ -308,7 +308,7 @@ func TestTimeMilli_MarshalJSON(t *testing.T) {
 		{
 			name:          "zone info - no msec",
 			time:          xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
-			expectedBytes: []byte(`"2016-07-10T21:12:00+02:00"`),
+			expectedBytes: []byte(`"2016-07-10T21:12:00.000+02:00"`),
 			expectedErr:   nil,
 		},
 	}
@@ -351,7 +351,7 @@ func TestTimeMilli_MarshalText(t *testing.T) {
 		{
 			name:          "zone info - no msec",
 			time:          xtime.DateMilli(2016, time.July, 10, 21, 12, 0, 0, time.FixedZone("CET", 2*60*60)),
-			expectedBytes: []byte(`2016-07-10T21:12:00+02:00`),
+			expectedBytes: []byte(`2016-07-10T21:12:00.000+02:00`),
 			expectedErr:   nil,
 		},
 	}
