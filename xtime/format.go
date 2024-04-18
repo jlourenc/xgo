@@ -10,7 +10,7 @@ import (
 
 // These are predefined extra layouts to use in time.Format and time.Parse.
 const (
-	RFC3339Milli = "2006-01-02T15:04:05.999Z07:00"
+	RFC3339Milli = "2006-01-02T15:04:05.000Z07:00"
 )
 
 // ParseMilli parses a formatted string and returns the time value it represents as TimeMilli.

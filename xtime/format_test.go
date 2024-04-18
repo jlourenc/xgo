@@ -190,6 +190,12 @@ func TestParseStampMilliInLocation(t *testing.T) {
 			expectedErr: true,
 		},
 		{
+			name:         "RFC3339Nano - no fractional second",
+			layout:       time.RFC3339Nano,
+			value:        "2016-07-10T21:12:00Z",
+			expectedTime: xtime.DateStampMilli(2016, time.July, 10, 21, 12, 0, 0, time.UTC),
+		},
+		{
 			name:         "RFC3339Milli - nil location",
 			layout:       xtime.RFC3339Milli,
 			value:        "2016-07-10T21:12:00.499Z",
