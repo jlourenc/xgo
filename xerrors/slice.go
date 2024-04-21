@@ -13,6 +13,8 @@ import (
 // Append is a helper function that appends errors into a single error to group
 // multiple errors. Any nil error within errs is ignored. If err is not a grouped
 // error then it will be turned into one.
+//
+// Deprecated: use xerrors.Join instead.
 func Append(err error, errs ...error) error {
 	sliceErr, ok := err.(*withSlice)
 	if !ok {
@@ -61,7 +63,7 @@ func (e *withSlice) Error() string {
 	sb.WriteString(" occurred:\n")
 
 	for _, err := range e.errs {
-		lines := strings.Split(strings.Trim(err.Error(), "\n"), "\n")
+		lines := strings.Split(strings.TrimSuffix(err.Error(), "\n"), "\n")
 		sb.WriteString("\t* ")
 		sb.WriteString(lines[0])
 		sb.WriteString("\n")
@@ -89,14 +91,10 @@ func (e *withSlice) Format(s fmt.State, verb rune) {
 			fmt.Fprint(s, " occurred:\n")
 
 			for _, err := range e.errs {
-				lines := strings.Split(strings.Trim(fmt.Sprintf("%+v", err), "\n"), "\n")
-				fmt.Fprint(s, "\t* ")
-				fmt.Fprint(s, lines[0])
-				fmt.Fprint(s, "\n")
+				lines := strings.Split(strings.TrimSuffix(fmt.Sprintf("%+v", err), "\n"), "\n")
+				fmt.Fprint(s, "\t* ", lines[0], "\n")
 				for _, line := range lines[1:] {
-					fmt.Fprint(s, "\t")
-					fmt.Fprint(s, line)
-					fmt.Fprint(s, "\n")
+					fmt.Fprint(s, "\t", line, "\n")
 				}
 			}
 			return

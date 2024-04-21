@@ -25,11 +25,11 @@ func ExampleAppend() {
 	var errs error
 
 	if err := vetOperands(-1, -2); err != nil {
-		errs = xerrors.Append(errs, xerrors.Wrapf(err, "failed to vet operands %d and %d", 0, -2))
+		errs = xerrors.Append(errs, xerrors.Wrapf(err, "failed to vet operands %d and %d", -1, -2))
 	}
 
 	if err := vetOperands(0, -2); err != nil {
-		errs = xerrors.Append(errs, xerrors.Wrapf(err, "failed to vet operands %d and %d", 0, 0))
+		errs = xerrors.Append(errs, xerrors.Wrapf(err, "failed to vet operands %d and %d", 0, -2))
 	}
 
 	if errs != nil {
@@ -38,10 +38,10 @@ func ExampleAppend() {
 
 	// Output:
 	// 2 errors occurred:
-	//	* failed to vet operands 0 and -2: 2 errors occurred:
+	//	* failed to vet operands -1 and -2: 2 errors occurred:
 	// 		* left operand is negative
 	// 		* right operand is negative
-	// 	* failed to vet operands 0 and 0: 1 error occurred:
+	// 	* failed to vet operands 0 and -2: 1 error occurred:
 	// 		* right operand is negative
 }
 
@@ -56,6 +56,42 @@ func ExampleAs() {
 	}
 
 	// Output: Failed at path: non-existing
+}
+
+func ExampleJoin() {
+	xerrors.EnableStackTrace(true)
+	defer xerrors.EnableStackTrace(false)
+
+	vetOperands := func(a, b int) (errs error) {
+		if a < 0 {
+			errs = xerrors.Join(errs, xerrors.New("left operand is negative"))
+		}
+		if b < 0 {
+			errs = xerrors.Join(errs, xerrors.New("right operand is negative"))
+		}
+		return errs
+	}
+
+	var errs error
+
+	if err := vetOperands(-1, -2); err != nil {
+		errs = xerrors.Join(errs, xerrors.Wrapf(err, "failed to vet operands %d and %d", -1, -2))
+	}
+
+	if err := vetOperands(0, -2); err != nil {
+		errs = xerrors.Append(errs, xerrors.Wrapf(err, "failed to vet operands %d and %d", 0, -2))
+	}
+
+	if errs != nil {
+		fmt.Print(errs)
+	}
+
+	// Output:
+	// 2 errors occurred:
+	//	* failed to vet operands -1 and -2: 2 errors occurred:
+	// 		* left operand is negative
+	// 		* right operand is negative
+	// 	* failed to vet operands 0 and -2: right operand is negative
 }
 
 func ExampleIs() {
