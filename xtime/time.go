@@ -1,4 +1,4 @@
-// Copyright 2024 Jérémy Lourenço. All rights reserved.
+// Copyright 2025 Jérémy Lourenço. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -37,14 +37,14 @@ type TimeMilli struct {
 // in the appropriate zone for that time in the given location.
 //
 // See time.Date for more information.
-func DateMilli(year int, month time.Month, day, hour, min, sec, msec int, loc *time.Location) TimeMilli {
-	// Normalize msec, sec, min, hour, overflowing into day.
-	sec, msec = norm(sec, msec, msecsInSec)
-	min, sec = norm(min, sec, secsInMin)
-	hour, min = norm(hour, min, minsInHour)
+func DateMilli(year int, month time.Month, day, hour, minute, second, millisecond int, loc *time.Location) TimeMilli {
+	// Normalize msec, sec, min and hour overflowing into day.
+	second, millisecond = norm(second, millisecond, msecsInSec)
+	minute, second = norm(minute, second, secsInMin)
+	hour, minute = norm(hour, minute, minsInHour)
 	day, hour = norm(day, hour, hoursInDay)
 
-	return TimeMilli{time.Date(year, month, day, hour, min, sec, msec*nsecsInMsec, loc)}
+	return TimeMilli{time.Date(year, month, day, hour, minute, second, millisecond*nsecsInMsec, loc)}
 }
 
 // NowMilli returns the current local time as TimeMilli.

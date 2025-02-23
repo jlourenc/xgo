@@ -1,4 +1,4 @@
-// Copyright 2024 Jérémy Lourenço. All rights reserved.
+// Copyright 2025 Jérémy Lourenço. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -38,7 +38,7 @@ func Exist(n int, cmp func(int) int) bool {
 	// binary search
 	i, j := 0, n
 	for i < j {
-		h := int(uint(i+j) >> 1) // avoid overflow when computing h
+		h := int(uint(i+j) >> 1) //nolint:gosec // avoid overflow when computing h
 
 		switch cmp(h) {
 		case 0:
