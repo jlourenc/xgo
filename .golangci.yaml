@@ -30,7 +30,19 @@ linters-settings:
       license that can be found in the LICENSE file.
   goimports:
     local-prefixes: github.com/jlourenc/xgo
-  gomnd:
+  gomodguard:
+    allowed:
+      modules: []
+      domains: []
+  gosimple:
+    checks: ['all']
+  gosmopolitan:
+    allow-time-local: true
+  govet:
+    enable-all: true
+  misspell:
+    locale: US
+  mnd:
     ignored-numbers:
       - '2'
       - '10'
@@ -38,22 +50,6 @@ linters-settings:
       - '16'
       - '32'
       - '64'
-  gomodguard:
-    allowed:
-      modules: []
-      domains: []
-  gosimple:
-    checks: ['all']
-    settings:
-      shadow:
-        strict: true
-  gosmopolitan:
-    allow-time-local: true
-  govet:
-    check-shadowing: true
-    enable-all: true
-  misspell:
-    locale: US
   nolintlint:
     require-explanation: true
     require-specific: true
@@ -85,13 +81,10 @@ linters-settings:
   stylecheck:
     checks: ['all']
     http-status-code-whitelist: []
-  tenv:
-    all: true
   usestdlibvars:
     constant-kind: true
     crypto-hash: true
     default-rpc-path: true
-    os-dev-null: true
     sql-isolation-level: true
     time-layout: true
     time-month: true
@@ -104,12 +97,11 @@ linters:
     - bodyclose
     - containedctx
     - contextcheck
+    - copyloopvar
     - dogsled
     - dupl
     - durationcheck
-    - execinquery
     - exhaustive
-    - exportloopref
     - forbidigo
     - gocheckcompilerdirectives
     - gochecksumtype
@@ -121,7 +113,6 @@ linters:
     - gofumpt
     - goheader
     - goimports
-    - gomnd
     - gomoddirectives
     - gomodguard
     - goprintffuncname
@@ -133,6 +124,7 @@ linters:
     - makezero
     - mirror
     - misspell
+    - mnd
     - musttag
     - nakedret
     - nestif
@@ -153,7 +145,6 @@ linters:
     - stylecheck
     - tagalign
     - tagliatelle
-    - tenv
     - testpackage
     - thelper
     - tparallel
@@ -161,6 +152,7 @@ linters:
     - unconvert
     - unparam
     - usestdlibvars
+    - usetesting
     - wastedassign
     - whitespace
     - zerologlint
@@ -172,9 +164,9 @@ issues:
         - dupl
         - errcheck
         - goconst
-        - gomnd
         - govet
         - lll
+        - mnd
     - path: _test\.go
       text: "function-length"
       linters:

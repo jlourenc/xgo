@@ -1,4 +1,4 @@
-// Copyright 2024 Jérémy Lourenço. All rights reserved.
+// Copyright 2025 Jérémy Lourenço. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -113,7 +113,7 @@ func (e *withSlice) Format(s fmt.State, verb rune) {
 
 // StackTrace makes withSlice implement the StackTracer interface.
 func (e *withSlice) StackTrace() StackTrace {
-	return e.errs[0].(StackTracer).StackTrace()
+	return e.errs[0].(StackTracer).StackTrace() //nolint:errcheck // guaranteed type
 }
 
 // Unwrap makes withSlice implement the Unwrapper interface.

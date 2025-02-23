@@ -1,4 +1,4 @@
-// Copyright 2024 Jérémy Lourenço. All rights reserved.
+// Copyright 2025 Jérémy Lourenço. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -28,14 +28,26 @@ func FreePort(ctx context.Context, network string, options ...ListenConfigOption
 			return 0, err
 		}
 		defer listener.Close()
-		return listener.Addr().(*net.TCPAddr).Port, nil
+
+		addr, ok := listener.Addr().(*net.TCPAddr)
+		if !ok {
+			return 0, fmt.Errorf("unexpected addr type: %T", listener.Addr())
+		}
+
+		return addr.Port, nil
 	case NetworkUDP, NetworkUDP4, NetworkUDP6:
 		listener, err := lc.ListenPacket(ctx, network, "localhost:0")
 		if err != nil {
 			return 0, err
 		}
 		defer listener.Close()
-		return listener.LocalAddr().(*net.UDPAddr).Port, nil
+
+		addr, ok := listener.LocalAddr().(*net.UDPAddr)
+		if !ok {
+			return 0, fmt.Errorf("unexpected addr type: %T", listener.LocalAddr())
+		}
+
+		return addr.Port, nil
 	default:
 		return 0, fmt.Errorf("invalid network: %s", network)
 	}
